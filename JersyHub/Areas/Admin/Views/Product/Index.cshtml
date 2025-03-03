@@ -1,0 +1,145 @@
+﻿@using JersyHub.Domain.Entities
+@model IEnumerable<Product>
+
+<div class="container">
+    <div class="row pt-4">
+        <div class="col-6">
+            <h2 class="text-primary">Product List</h2>
+        </div>
+        <div class="col-6 text-end">
+            <a asp-area="Admin" asp-controller="Product" asp-action="Upsert" class="btn btn-primary">
+                <i class="bi bi-plus-circle"></i> Create New Product
+            </a>
+        </div>
+    </div>
+
+    <!-- DataGrid Container -->
+    <div id="productGrid"></div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        var products = @Html.Raw(Json.Serialize(Model)); // Convert Model to JSON
+
+        $("#productGrid").dxDataGrid({
+            dataSource: products,
+            showBorders: true,  // Adds border to entire DataGrid
+            columnAutoWidth: true,
+            paging: { pageSize: 10 },
+            headerFilter: { visible: true },
+            searchPanel: { visible: true, width: 240, placeholder: "Search..." },
+
+            columns: [
+                { dataField: "productName", caption: "Product Name" },
+                { dataField: "productType", caption: "Product Type" },
+                { dataField: "team", caption: "Team" },
+                { dataField: "category.name", caption: "League" }, // Nested property
+                { dataField: "edition", caption: "Edition" },
+                { dataField: "year", caption: "Year" },
+                { dataField: "price", caption: "Price" },
+                {
+                    caption: "Actions",
+                    width: 200,
+                    alignment: "center",
+                    cellTemplate: function (container, options) {
+                        var id = options.data.id;
+
+                        // Create the Edit button
+                        $("<a>")
+                            .addClass("btn btn-primary mx-1")
+                            .attr("href", "/Admin/Product/Upsert/" + id)
+                            .html('<i class="bi bi-pencil-square"></i> Edit')
+                            .appendTo(container);
+
+                        // Create the Delete button
+                        $("<a>")
+                            .addClass("btn btn-danger mx-1")
+                            .attr("href", "/Admin/Product/Delete/" + id)
+                            .html('<i class="bi bi-trash"></i> Delete')
+                            .appendTo(container);
+                    }
+                }
+            ]
+        });
+    });
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+@* @model IEnumerable<Product>
+
+
+<div class="container">
+    <div class="row pt-4">
+        <div class="col-6">
+            <h2 class="text-primary">Product List</h2>
+        </div>
+        <div class="col-6 text-end">
+            <a asp-controller="Product" asp-action="Upsert" class="btn btn-primary"><i class="bi bi-plus-circle"></i> Create New Product</a>
+        </div>
+    </div>
+    <table class="table table-bordered table-stripped">
+    <tr>
+        <th>Product Name</th>
+        <th>Product Type</th>
+        <th>Team</th>
+        <th>League</th>
+        <th>Edition</th>
+        <th>Year</th>
+        <th>Price</th>
+        <th></th>
+    </tr>
+    @foreach(var item in Model){
+        <tr>
+            <td>@item.ProductName</td>
+            <td>@item.ProductType</td>
+            <td>@item.Team</td> 
+            <td>@item.Category.Name</td>
+            <td>@item.Edition</td>
+            <td>@item.Year</td>
+            <td>@item.Price</td>
+            <td>
+                <div class="btn-group" role="group" style="while-space: nowrap;">
+                        <a asp-route-id="@item.Id" asp-controller="Product" asp-action="Upsert" class="btn btn-primary mx-2"><i class="bi bi-pencil-square"></i> Edit</a>
+                        <a asp-route-id="@item.Id" asp-controller="Product" asp-action="Delete" class="btn btn-danger mx-2"><i class="bi bi-trash"></i> Delete</a>
+                </div>
+            </td>
+        </tr>
+    }
+</table>
+</div>
+
+
+
+ *@

@@ -1,0 +1,301 @@
+﻿@using JersyHub.Models.ViewModel
+@model ProductVM
+
+<form method="post" enctype="multipart/form-data">
+    <input asp-for="Product.Id" hidden />
+    <input asp-for="Product.ImageUrl" hidden>
+
+    <div class="border p-3 mt-4">
+
+        <div class="row pb-2">
+            <h2 class="text-primary">@(Model.Product.Id != 0 ? "Update" : "Create") Product</h2>
+            <hr />
+        </div>
+        <div class="row">
+            <div class="col-10">
+                <!-- Product Name -->
+                <div class="mb-3">
+                    <label for="productNameField">Product Name</label>
+                    <div id="productNameField"></div>
+                    <input type="hidden" id="productNameInput" name="Product.ProductName" value="@Model.Product.ProductName" />
+                    <span asp-validation-for="Product.ProductName" class="text-danger"></span>
+                </div>
+
+                <!-- Product Type -->
+                <div class="mb-3">
+                    <label for="productTypeField">Product Type</label>
+                    <div id="productTypeField"></div>
+                    <input type="hidden" id="productTypeInput" name="Product.ProductType" value="@Model.Product.ProductType" />
+                    <span asp-validation-for="Product.ProductType" class="text-danger"></span>
+                </div>
+
+                <!-- Team -->
+                <div class="mb-3">
+                    <label for="teamField">Team</label>
+                    <div id="teamField"></div>
+                    <input type="hidden" id="teamInput" name="Product.Team" value="@Model.Product.Team" />
+                    <span asp-validation-for="Product.Team" class="text-danger"></span>
+                </div>
+
+                <!-- Category (League) -->
+                <div class="mb-3">
+                    <label for="categoryField">League</label>
+                    <div id="categoryField"></div>
+                    <input type="hidden" id="categoryInput" name="Product.CategoryId" value="@Model.Product.CategoryId" />
+                    
+                    <span asp-validation-for="Product.CategoryId" class="text-danger"></span>
+                </div>
+
+                <!-- Edition -->
+                <div class="mb-3">
+                    <label for="editionField">Edition</label>
+                    <div id="editionField"></div>
+                    <input type="hidden" id="editionInput" name="Product.Edition" value="@Model.Product.Edition" />
+                    <span asp-validation-for="Product.Edition" class="text-danger"></span>
+                </div>
+
+                <!-- Year -->
+                <div class="mb-3">
+                    <label for="yearField">Year</label>
+                    <div id="yearField"></div>
+                    <input type="hidden" id="yearInput" name="Product.Year" value="@Model.Product.Year" />
+                    <span asp-validation-for="Product.Year" class="text-danger"></span>
+                </div>
+
+                <!-- Price -->
+                <div class="mb-3">
+                    <label for="priceField">Price</label>
+                    <div id="priceField"></div>
+                    <input type="hidden" id="priceInput" name="Product.Price" value="@Model.Product.Price" />
+                    <span asp-validation-for="Product.Price" class="text-danger"></span>
+                </div>
+
+                <!-- Image URL -->
+                <div class="mb-3">
+                    <label for="imageUrlField">Image URL</label>
+                    <input type="file" name="file" class="form-control" />
+                </div>
+
+                <!-- Submit Button (Create/Update) -->
+                @if (Model.Product.Id != 0)
+                {
+                    <button type="submit" class="btn btn-primary">Update</button>
+                }
+                else
+                {
+                    <button type="submit" class="btn btn-primary">Create</button>
+                }
+
+                <!-- Back Button -->
+                <a asp-controller="Product" asp-action="Index" class="btn btn-outline-secondary">Back To List</a>
+            </div>
+
+            <!-- Product Image Display -->
+            <div class="col-2">
+                <img src="@Model.Product.ImageUrl" width="100%" />
+            </div>
+        </div>
+    </div>
+</form>
+
+@section Scripts {
+    @await Html.PartialAsync("_ValidationScriptsPartial")
+
+    <script>
+        $(function () {
+            // Product Name
+            $("#productNameField").dxTextBox({
+                value: '@Model.Product.ProductName',
+                placeholder: 'Enter product name',
+                showClearButton: true,
+                onValueChanged: function (e) {
+                    $("#productNameInput").val(e.value);
+                }
+            });
+
+            // Product Type
+            $("#productTypeField").dxTextBox({
+                value: '@Model.Product.ProductType',
+                placeholder: 'Enter product type',
+                showClearButton: true,
+                onValueChanged: function (e) {
+                    $("#productTypeInput").val(e.value);
+                }
+            });
+
+            // Team
+            $("#teamField").dxTextBox({
+                value: '@Model.Product.Team',
+                placeholder: 'Enter team name',
+                showClearButton: true,
+                onValueChanged: function (e) {
+                    $("#teamInput").val(e.value);
+                }
+            });
+
+            // Category (League)
+            $("#categoryField").dxSelectBox({
+                value: '@Model.Product.CategoryId',
+                items: @Html.Raw(Json.Serialize(Model.CategoryList)),
+                displayExpr: "Text",
+                valueExpr: "Value",
+                placeholder: '--Select Category--',
+                onValueChanged: function (e) {
+                    $("#categoryInput").val(e.value);
+                }
+            });
+
+            // Edition
+            $("#editionField").dxTextBox({
+                value: '@Model.Product.Edition',
+                placeholder: 'Enter edition',
+                showClearButton: true,
+                onValueChanged: function (e) {
+                    $("#editionInput").val(e.value);
+                }
+            });
+
+            // Year
+            $("#yearField").dxNumberBox({
+                value: '@Model.Product.Year',
+                min: 1900,
+                max: 2100,
+                placeholder: 'Enter year',
+                showClearButton: true,
+                onValueChanged: function (e) {
+                    $("#yearInput").val(e.value);
+                }
+            });
+
+            // Price
+            $("#priceField").dxNumberBox({
+                value: '@Model.Product.Price',
+                min: 0,
+                showClearButton: true,
+                placeholder: 'Enter price',
+                onValueChanged: function (e) {
+                    $("#priceInput").val(e.value);
+                }
+            });
+        });
+    </script>
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+@* @using JersyHub.Models.ViewModel
+@model ProductVM
+
+<form method="post" enctype="multipart/form-data">
+    <input asp-for="Product.Id" hidden />
+
+    <div class="border p-3 mt-4">
+
+        <div class="row pb-2">
+            <h2 class="text-primary">@(Model.Product.Id != 0 ? "Update" : "Create") Product</h2>
+            <hr />
+        </div>
+        <div class="row">
+            <div class="col-10">
+                <div class="mb-3">
+                    <label asp-for="Product.ProductName">Product Name</label>
+                    <input asp-for="Product.ProductName" class="form-control" />
+                    <span asp-validation-for="Product.ProductName" class="text-danger"></span>
+                </div>
+                <div class="mb-3">
+                    <label asp-for="Product.ProductType">ProductType</label>
+                    <input asp-for="Product.ProductType" class="form-control" />
+                    <span asp-validation-for="Product.ProductType" class="text-danger"></span>
+                </div>
+                <div class="mb-3">
+                    <label asp-for="Product.Team">Team</label>
+                    <input asp-for="Product.Team" class="form-control" />
+                    <span asp-validation-for="Product.Team" class="text-danger"></span>
+                </div>
+                <div class="mb-3">
+                    <label asp-for="Product.CategoryId">League</label>
+                    <select asp-for="Product.CategoryId" asp-items="@Model.CategoryList" class="form-select border-0 ">
+                        League
+                        <option disabled selected>--Select Category--</option>
+                    </select>
+                    <span asp-validation-for="Product.CategoryId" class="text-danger"></span>
+                </div>
+                <div class="mb-3">
+                    <label asp-for="Product.Edition">Edition</label>
+                    <input asp-for="Product.Edition" class="form-control" />
+                    <span asp-validation-for="Product.Edition" class="text-danger"></span>
+                </div>
+                <div class="mb-3">
+                    <label asp-for="Product.Year">Year</label>
+                    <input asp-for="Product.Year" class="form-control" />
+                    <span asp-validation-for="Product.Year" class="text-danger"></span>
+                </div>
+                <div class="mb-3">
+                    <label asp-for="Product.Price">Price</label>
+                    <input asp-for="Product.Price" class="form-control" />
+                    <span asp-validation-for="Product.Price" class="text-danger"></span>
+                </div>
+                <div class="mb-3">
+                    <label asp-for="Product.ImageUrl">ImageURL</label>
+                    <input type="file" name="file" class="form-control" />
+                </div>
+                @if (Model.Product.Id != 0)
+                {
+
+                    <button type="Submit" class="btn btn-primary ">Update</button>
+
+                }
+                else
+                {
+                    <button type="Submit" class="btn btn-primary ">Create</button>
+
+                }
+                <a asp-controller="Product" asp-action="Index" class="btn btn-outline-secondary ">Back To List</a>
+            </div>
+            <div class="col-2">
+                <img src="@Model.Product.ImageUrl" width="100%" />
+
+            </div>
+        </div>
+
+        
+    </div>
+</form>
+
+@section Scripts {
+    @{
+        <partial name="_ValidationScriptsPartial" />
+    }
+} *@

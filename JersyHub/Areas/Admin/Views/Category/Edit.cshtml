@@ -1,0 +1,137 @@
+﻿@using JersyHub.Domain.Entities
+@model Category
+
+<form method="post">
+    <div class="border p-3 mt-4">
+        <div class="row pb-2">
+            <h2 class="text-primary">Edit Category</h2>
+            <hr />
+        </div>
+
+        <div class="mb-3">
+            <label for="nameField">Name</label>
+            <div id="nameField"></div>
+            <input type="hidden" id="nameInput" name="Name" value="@Model.Name" />
+            <span asp-validation-for="Name" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label for="leagueCountryField">League Country</label>
+            <div id="leagueCountryField"></div>
+            <input type="hidden" id="leagueCountryInput" name="LeagueCountry" value="@Model.LeagueCountry" />
+            <span asp-validation-for="LeagueCountry" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label for="displayOrderField">Display Order</label>
+            <div id="displayOrderField"></div>
+            <input type="hidden" id="displayOrderInput" name="DisplayOrder" value="@Model.DisplayOrder" />
+            <span asp-validation-for="DisplayOrder" class="text-danger"></span>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Edit</button>
+        <a asp-controller="Category" asp-action="Index" class="btn btn-outline-secondary">Back To List</a>
+    </div>
+</form>
+
+@section Scripts {
+    @await Html.PartialAsync("_ValidationScriptsPartial")
+
+    <script>
+        $(function () {
+            $("#nameField").dxTextBox({
+                value: '@Model.Name',
+                showClearButton: true,
+                onValueChanged: function (e) {
+                    $("#nameInput").val(e.value); 
+                }
+            });
+
+            $("#leagueCountryField").dxTextBox({
+                value: '@Model.LeagueCountry',
+                showClearButton: true,
+                onValueChanged: function (e) {
+                    $("#leagueCountryInput").val(e.value); 
+                }
+            });
+
+            $("#displayOrderField").dxNumberBox({
+                value: '@Model.DisplayOrder',
+                showClearButton: true,
+                min: 1,
+                max: 100,
+                onValueChanged: function (e) {
+                    $("#displayOrderInput").val(e.value); 
+                }
+            });
+        });
+    </script>
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+@* @using JersyHub.Domain.Entities
+ @model Category
+
+<form method="post">
+    <div class="border p-3 mt-4">
+        <div class="row pb-2">
+            <h2 class="text-primary">Edit Category</h2>
+            <hr />
+        </div>
+        <div class="mb-3">
+            <label asp-for="Name">Name</label>
+            <input asp-for="Name" class="form-control" />
+            <span asp-validation-for="Name" class="text-danger"></span>
+        </div>
+        <div class="mb-3">
+            <label asp-for="LeagueCountry">League Country</label>
+            <input asp-for="LeagueCountry" class="form-control" />
+            <span asp-validation-for="LeagueCountry" class="text-danger"></span>
+        </div>
+        <div class="mb-3">
+            <label asp-for="DisplayOrder">Display Order</label>
+            <input asp-for="DisplayOrder" class="form-control" />
+            <span asp-validation-for="DisplayOrder" class="text-danger"></span>
+        </div>
+
+        <button type="Submit" class="btn btn-primary ">Edit</button>
+        <a asp-controller="Category" asp-action="Index" class="btn btn-outline-secondary ">Back To List</a>
+    </div>
+</form>
+ 
+@section Scripts {
+    @{
+        <partial name="_ValidationScriptsPartial" />
+    }
+} *@

@@ -1,0 +1,130 @@
+﻿@using JersyHub.Domain.Entities
+@model IEnumerable<Category>
+
+<div class="container">
+    <div class="row pt-4">
+        <div class="col-6">
+            <h2 class="text-primary">Category List</h2>
+        </div>
+        <div class="col-6 text-end">
+            <a asp-controller="Category" asp-action="Create" class="btn btn-primary">
+                <i class="bi bi-plus-circle"></i> Create New Category
+            </a>
+        </div>
+    </div>
+
+    <!-- DataGrid Container -->
+    <div id="categoryGrid"></div>
+</div>
+
+
+<script>
+    $(document).ready(function () {
+        var categories = @Html.Raw(Json.Serialize(Model)); // Convert Model to JSON
+
+        $("#categoryGrid").dxDataGrid({
+            dataSource: categories,
+            showBorders: true,  // Adds border to entire DataGrid
+            columnAutoWidth: true,
+            paging: { pageSize: 10 },
+            headerFilter: { visible: true },
+            searchPanel: { visible: true, width: 240, placeholder: "Search..." },
+
+            columns: [
+                { dataField: "id", caption: "ID", width: 50 },
+                { dataField: "name", caption: "Category Name" },
+                { dataField: "leagueCountry", caption: "League Country" },
+                { dataField: "displayOrder", caption: "Display Order" },
+                {
+                    caption: "Actions",
+                    width: 200,
+                    alignment: "center",
+                    cellTemplate: function (container, options) {
+                        var id = options.data.id;
+
+                        // Create the Edit button
+                        $("<a>")
+                            .addClass("btn btn-primary mx-1")
+                            .attr("href", "/Admin/Category/Edit/" + id)
+                            .html('<i class="bi bi-pencil-square"></i> Edit')
+                            .appendTo(container);
+
+                        // Create the Delete button
+                        $("<a>")
+                            .addClass("btn btn-danger mx-1")
+                            .attr("href", "/Admin/Category/Delete/" + id)
+                            .html('<i class="bi bi-trash"></i> Delete')
+                            .appendTo(container);
+                    }
+                }
+            ]
+        });
+    });
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+@* @using JersyHub.Domain.Entities
+@model IEnumerable<Category>
+
+
+
+<div class="container">
+    <div class="row pt-4">
+        <div class="col-6">
+            <h2 class="text-primary">Category List</h2>
+        </div>
+        <div class="col-6 text-end">
+            <a asp-controller="Category" asp-action="Create" class="btn btn-primary"><i class="bi bi-plus-circle"></i> Create New category</a>
+        </div>
+    </div>
+<table class="table table-bordered table-stripped">
+    <tr>
+        <th>Category</th>
+        <th>League Country</th>
+        <th>Display Order</th>
+        <th></th>
+    </tr>
+    @foreach(var item in Model){
+        <tr>
+            <td>@item.Name</td>
+            <td>@item.LeagueCountry</td>
+            <td>@item.DisplayOrder</td>
+            <td>
+                <div class="w-75 btn-group" role="group">
+                        <a asp-route-id="@item.Id" asp-controller="Category" asp-action="Edit" class="btn btn-primary mx-2"><i class="bi bi-pencil-square"></i> Edit</a>
+                        <a asp-route-id="@item.Id" asp-controller="Category" asp-action="Delete" class="btn btn-danger mx-2"><i class="bi bi-trash"></i> Delete</a>
+                </div>
+            </td>
+        </tr>
+    }
+</table>
+</div>
+ *@

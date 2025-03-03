@@ -1,0 +1,160 @@
+﻿@using JersyHub.Domain.Entities
+@model Product
+
+<form method="post">
+    <div class="border p-3 mt-4">
+        <div class="row pb-2">
+            <h2 class="text-primary">Delete Product</h2>
+            <hr />
+        </div>
+
+        <div class="mb-3">
+            <label for="productNameField">Product Name</label>
+            <div id="productNameField"></div>
+        </div>
+
+        <div class="mb-3">
+            <label for="productTypeField">Product Type</label>
+            <div id="productTypeField"></div>
+        </div>
+
+        <div class="mb-3">
+            <label for="teamField">Team</label>
+            <div id="teamField"></div>
+        </div>
+
+        <div class="mb-3">
+            <label for="editionField">Edition</label>
+            <div id="editionField"></div>
+        </div>
+
+        <div class="mb-3">
+            <label for="yearField">Year</label>
+            <div id="yearField"></div>
+        </div>
+
+        <div class="mb-3">
+            <label for="priceField">Price</label>
+            <div id="priceField"></div>
+        </div>
+
+        <button type="submit" class="btn btn-danger">Delete</button>
+        <a asp-controller="Product" asp-action="Index" class="btn btn-outline-secondary">Back To List</a>
+    </div>
+</form>
+
+@section Scripts {
+    @await Html.PartialAsync("_ValidationScriptsPartial")
+
+    <script>
+        $(function () {
+            $("#productNameField").dxTextBox({
+                value: '@Model.ProductName',
+                readOnly: true,
+                showClearButton: false
+            });
+
+            $("#productTypeField").dxTextBox({
+                value: '@Model.ProductType',
+                readOnly: true,
+                showClearButton: false
+            });
+
+            $("#teamField").dxTextBox({
+                value: '@Model.Team',
+                readOnly: true,
+                showClearButton: false
+            });
+
+            $("#editionField").dxTextBox({
+                value: '@Model.Edition',
+                readOnly: true,
+                showClearButton: false
+            });
+
+            $("#yearField").dxNumberBox({
+                value: '@Model.Year',
+                readOnly: true,
+                showSpinButtons: false
+            });
+
+            $("#priceField").dxNumberBox({
+                value: '@Model.Price',
+                readOnly: true,
+                showSpinButtons: false
+            });
+        });
+    </script>
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+@*  @model Product
+
+<form method="post">
+    <div class="border p-3 mt-4">
+        <div class="row pb-2">
+            <h2 class="text-primary">Delete Product</h2>
+            <hr />
+        </div>
+        <div class="mb-3">
+            <label asp-for="ProductName">Product Name</label>
+            <input asp-for="ProductName" class="form-control" />
+        </div>
+        <div class="mb-3">
+            <label asp-for="ProductType">ProductType</label>
+            <input asp-for="ProductType" class="form-control" />
+        </div>
+        <div class="mb-3">
+            <label asp-for="Team">Team</label>
+            <input asp-for="Team" class="form-control" />
+        </div>
+       
+        <div class="mb-3">
+            <label asp-for="Edition">Edition</label>
+            <input asp-for="Edition" class="form-control" />
+        </div>
+        <div class="mb-3">
+            <label asp-for="Year">Year</label>
+            <input asp-for="Year" class="form-control" />
+        </div>
+        <div class="mb-3">
+            <label asp-for="Price">Price</label>
+            <input asp-for="Price" class="form-control" />
+        </div>
+        <button type="Submit" class="btn btn-primary ">Delete</button>
+        <a asp-controller="Category" asp-action="Index" class="btn btn-outline-secondary ">Back To List</a>
+    </div>
+</form> *@
+

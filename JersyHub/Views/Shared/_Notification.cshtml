@@ -1,0 +1,15 @@
+﻿@if (TempData["success"] != null)
+{
+            <p class="text-success">@TempData["success"]</p>
+
+}
+@if (TempData["delete"] != null)
+{
+            <p class="text-danger">@TempData["delete"]</p>
+
+}
+@if (TempData["edit"] != null)
+{
+            <p class="text-primary">@TempData["edit"]</p>
+
+}
