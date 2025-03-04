@@ -137,8 +137,8 @@
             $("#categoryField").dxSelectBox({
                 value: '@Model.Product.CategoryId',
                 items: @Html.Raw(Json.Serialize(Model.CategoryList)),
-                displayExpr: "Text",
-                valueExpr: "Value",
+                displayExpr: "text",
+                valueExpr: "value",
                 placeholder: '--Select Category--',
                 onValueChanged: function (e) {
                     $("#categoryInput").val(e.value);

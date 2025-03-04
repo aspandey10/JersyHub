@@ -15,7 +15,7 @@ namespace JersyHub.Areas.Admin.Controllers
         public CategoryController(IUnitOfWork uow)
         {
             _uow = uow;
-        }
+        } 
 
 
         public IActionResult Index()

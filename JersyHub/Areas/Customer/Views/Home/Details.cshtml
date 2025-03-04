@@ -1,6 +1,9 @@
-﻿@model JersyHub.Models.Product
+﻿@using JersyHub.Domain.Entities
+@model ShoppingCart
+
 
 <form method="post">
+    <input hidden asp-for="ProductId" />
     <div class="container mt-5">
         <div class="row pb-2">
             <h2 class="text-primary">Product Details</h2>
@@ -10,24 +13,37 @@
             <div class="row g-0 align-items-center">
                 <!-- Image Section (Left) -->
                 <div class="col-md-4 text-center">
-                    <img src="@Model.ImageUrl" class="img-fluid rounded-start" style="max-width: 100%; height: auto;" alt="Product Image">
+                    <img src="@Model.Product.ImageUrl" class="img-fluid rounded-start" style="max-width: 100%; height: auto;" alt="Product Image">
                 </div>
 
                 <!-- Details Section (Right) -->
                 <div class="col-md-8">
                     <div class="card-body">
-                        <h2 class="card-title text-primary">@Model.ProductName</h2>
+                        <h2 class="card-title text-primary">@Model.Product.ProductName</h2>
                         <hr>
-                        <p class="card-text"><strong>Type:</strong> @Model.ProductType</p>
-                        <p class="card-text"><strong>Team:</strong> @Model.Team</p>
-                        <p class="card-text"><strong>League:</strong> @Model.Category.Name</p>
-                        <p class="card-text"><strong>Edition:</strong> @Model.Edition</p>
-                        <p class="card-text"><strong>Year:</strong> @Model.Year</p>
-                        <p class="card-text"><strong>Price:</strong> <span class="text-success fw-bold">Rs. @Model.Price</span></p>
+                        <p class="card-text"><strong>Type:</strong> @Model.Product.ProductType</p>
+                        <p class="card-text"><strong>Team:</strong> @Model.Product.Team</p>
+                        <p class="card-text"><strong>League:</strong> @Model.Product.Category.Name</p>
+                        <p class="card-text"><strong>Edition:</strong> @Model.Product.Edition</p>
+                        <p class="card-text"><strong>Year:</strong> @Model.Product.Year</p>
+                        <p class="card-text"><strong>Price:</strong> <span class="text-success fw-bold">Rs. @Model.Product.Price</span></p>
+                        <div class="row pl-2 mb-3">
+                            <div class="col-md-4">
+                                <div class="input-group mb-3">
+                                    <span class="input-group-text bg-primary text-white border-0 fw-semibold"
+                                          id="inputGroup-sizing-default">
+                                        Count
+                                    </span>
+                                    <input asp-for="Count" type="number" value="1" class="form-control text-end"
+                                           aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" />
+
+                                </div>
+                            </div>
+                        </div>
 
                         <div class="row mt-4">
                             <div class="col-md-3">
-                                <button type="submit" disabled class="btn btn-primary bg-gradient w-100 py-2 text-uppercase fw-semibold">
+                                <button type="submit"  class="btn btn-primary bg-gradient w-100 py-2 text-uppercase fw-semibold">
                                     Add to Cart
                                 </button>
                             </div>

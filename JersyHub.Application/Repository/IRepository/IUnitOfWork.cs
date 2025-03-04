@@ -4,6 +4,10 @@
     {
         ICategoryRepository Category { get; }
         IProductRepository Product { get; }
+        IShoppingCartRepository ShoppingCart { get; }
+        IApplicationUserRepository ApplicationUser { get; }
+        IOrderDeatilRepository OrderDetail { get; }
+        IOrderHeaderRepository OrderHeader { get; }
 
         void Save();
     }

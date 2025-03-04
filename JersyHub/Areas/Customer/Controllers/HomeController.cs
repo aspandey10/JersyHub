@@ -1,6 +1,10 @@
-using System.Diagnostics;
+ using System.Diagnostics;
+using System.Security.Claims;
 using JersyHub.Application.Repository.IRepository;
+using JersyHub.Domain.Entities;
+using JersyHub.Infrastructure.Repo;
 using JersyHub.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace JersyHub.Areas.Customer.Controllers
@@ -20,14 +24,42 @@ namespace JersyHub.Areas.Customer.Controllers
 
         public IActionResult Index()
         {
-            IEnumerable<Product> productList = uow.Product.GetAll(includeProperties: "Category");
+            IEnumerable<Product > productList = uow.Product.GetAll(includeProperties: "Category");
             return View(productList);
         }
 
-        public IActionResult Details(int id)
+        public IActionResult Details(int productId)
         {
-            Product product = uow.Product.Get(u=>u.Id==id,includeProperties: "Category");
-            return View(product);
+            ShoppingCart cart = new()
+            {
+                Product = uow.Product.Get(u => u.Id == productId, includeProperties: "Category"),
+                Count = 1,
+                ProductId = productId
+
+            };
+            return View(cart);
+
+        }
+        [HttpPost]
+        [Authorize]
+        public IActionResult Details(ShoppingCart shoppingCart)
+        {
+            var claimsIdentity = (ClaimsIdentity)User.Identity;
+            var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
+            shoppingCart.ApplicationUserId = userId;
+
+            ShoppingCart cartDb = uow.ShoppingCart.Get(u => u.ApplicationUserId == userId && u.ProductId == shoppingCart.ProductId);
+            if(cartDb == null)
+            {
+                uow.ShoppingCart.Add(shoppingCart);
+            }
+            else
+            {
+                cartDb.Count += shoppingCart.Count;
+                uow.ShoppingCart.Update(cartDb);
+            }
+            uow.Save();
+            return RedirectToAction(nameof(Index));
 
         }
 

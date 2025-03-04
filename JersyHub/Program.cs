@@ -17,7 +17,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(options=>
 builder.Services.AddIdentity<IdentityUser,IdentityRole>().AddEntityFrameworkStores<ApplicationDbContext>().AddDefaultTokenProviders();
 builder.Services.AddRazorPages();
 builder.Services.AddScoped<IUnitOfWork,UnitOfWork>();
-builder.Services.AddScoped<IEmailSender,EmailSender>();    
+builder.Services.AddScoped<IEmailSender,EmailSender>();     
 var app = builder.Build(); 
 
 // Configure the HTTP request pipeline. 

@@ -37,9 +37,15 @@ namespace JersyHub.Infrastructure.Repo
             //return data.FirstOrDefault();
         }
 
-        public IEnumerable<T> GetAll(string? includeProperties = null)
-        {
-            IQueryable<T> query = dbset;
+        public IEnumerable<T> GetAll(Expression<Func<T, bool>>? filter,string? includeProperties = null)
+        { 
+            IQueryable<T> query = dbset; 
+            if (filter != null)
+            {
+                query = query.Where(filter);
+
+            }
+
             if (!string.IsNullOrEmpty(includeProperties))
             {
                 foreach (var property in includeProperties.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
