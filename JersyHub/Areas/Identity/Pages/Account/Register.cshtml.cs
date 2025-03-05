@@ -130,6 +130,10 @@ namespace JersyHub.Areas.Identity.Pages.Account
             {
                 await _roleManager.CreateAsync(new IdentityRole(StaticDetail.Role_Admin));
             }
+            if (!await _roleManager.RoleExistsAsync(StaticDetail.Role_Employee))
+            {
+                await _roleManager.CreateAsync(new IdentityRole(StaticDetail.Role_Employee));
+            }
             Input = new()
             { 
                 RoleList = _roleManager.Roles.Select(x => x.Name).Select(i => new SelectListItem

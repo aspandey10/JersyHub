@@ -1,0 +1,196 @@
+﻿@using JersyHub.Models.ViewModel
+@model IEnumerable<OrderVM>
+
+<div class="container">
+    <div class="row pt-4">
+        <div class="col-6">
+            <h2 class="text-primary">Order List</h2>
+        </div>
+    </div>
+
+    <!-- DataGrid Container -->
+    <div id="orderGrid"></div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        var orders = @Html.Raw(Json.Serialize(Model)); // Convert Model to JSON
+
+        $("#orderGrid").dxDataGrid({
+            dataSource: orders,
+            showBorders: true,
+            columnAutoWidth: true,
+            paging: { pageSize: 10 },
+            headerFilter: { visible: true },
+            searchPanel: { visible: true, width: 240, placeholder: "Search..." },
+
+            columns: [
+                { dataField: "orderHeader.id", caption: "ID" },
+                { dataField: "orderHeader.name", caption: "Customer Name" },
+                { dataField: "orderHeader.phoneNumber", caption: "Phone Number" },
+                { dataField: "orderHeader.applicationUser.email", caption: "Email" }, // Nested property
+                { dataField: "orderHeader.orderStatus", caption: "Status" },
+                { dataField: "orderHeader.orderTotal", caption: "Total", },
+                {
+                    caption: "Actions",
+                    width: 200,
+                    alignment: "center",
+                    cellTemplate: function (container, options) {
+                        var id = options.data.orderHeader.id;
+
+                        // Create the Details button 
+                        $("<a>")
+                            .addClass("btn btn-primary mx-1")
+                            .attr("href", "/Admin/Order/Details/" + id)
+                            .html('<i class="bi bi-eye"></i> Details')
+                            .appendTo(container);
+                    }
+                }
+            ]
+        });
+    });
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+@* @using JersyHub.Models.ViewModel
+@model List<OrderVM>
+
+
+<div class="container">
+    <div class="row pt-4">
+        <div class="col-6">
+            <h2 class="text-primary">Order List</h2>
+        </div>
+        
+    </div>
+    <table class="table table-bordered table-stripped">
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Phone Number</th>
+            <th>Email</th>
+            <th>Status</th>
+            <th>Total</th>
+            <th></th>
+        </tr>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.OrderHeader.Id</td>
+                <td>@item.OrderHeader.Name</td>
+                <td>@item.OrderHeader.PhoneNumber</td>
+                <td>@item.OrderHeader.ApplicationUser.Email</td>
+                <td>@item.OrderHeader.OrderStatus</td>
+                <td>@item.OrderHeader.OrderTotal</td>
+                <td>
+                    <div class="btn-group" role="group" style="while-space: nowrap;">
+                        <a asp-route-id="@item.OrderHeader.Id" asp-controller="Order" asp-action="Details" class="btn btn-primary mx-2"><i class="bi bi-pencil-square"></i> Edit</a>
+                    </div> 
+                </td>
+            </tr>
+        }
+    </table>
+</div>
+
+ *@
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
