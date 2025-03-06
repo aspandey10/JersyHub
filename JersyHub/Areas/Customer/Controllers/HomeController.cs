@@ -1,11 +1,13 @@
- using System.Diagnostics;
-using System.Security.Claims;
 using JersyHub.Application.Repository.IRepository;
+using JersyHub.Data;
 using JersyHub.Domain.Entities;
 using JersyHub.Infrastructure.Repo;
 using JersyHub.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+ using System.Diagnostics;
+using System.Security.Claims;
 
 namespace JersyHub.Areas.Customer.Controllers
 {
@@ -24,6 +26,12 @@ namespace JersyHub.Areas.Customer.Controllers
 
         public IActionResult Index()
         {
+            var claimsIdentity = (ClaimsIdentity)User.Identity;
+            var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
+            if (claim != null)
+            {
+                HttpContext.Session.SetInt32(StaticDetail.SessionCart, uow.ShoppingCart.GetAll(u => u.ApplicationUserId == claim.Value).Count());
+            }
             IEnumerable<Product > productList = uow.Product.GetAll(includeProperties: "Category");
             return View(productList);
         }
@@ -50,15 +58,18 @@ namespace JersyHub.Areas.Customer.Controllers
 
             ShoppingCart cartDb = uow.ShoppingCart.Get(u => u.ApplicationUserId == userId && u.ProductId == shoppingCart.ProductId);
             if(cartDb == null)
-            {
+            { 
                 uow.ShoppingCart.Add(shoppingCart);
+                HttpContext.Session.SetInt32(StaticDetail.SessionCart, uow.ShoppingCart.GetAll(u => u.ApplicationUserId == userId).Count());
+                uow.Save();
             }
             else
             {
                 cartDb.Count += shoppingCart.Count;
                 uow.ShoppingCart.Update(cartDb);
+                uow.Save();
+
             }
-            uow.Save();
             return RedirectToAction(nameof(Index));
 
         }

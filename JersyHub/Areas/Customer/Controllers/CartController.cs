@@ -59,6 +59,7 @@ namespace JersyHub.Areas.Customer.Controllers
             var cartDb = _uow.ShoppingCart.Get(u => u.Id == cartId);
             if (cartDb.Count <= 1)
             {
+                HttpContext.Session.SetInt32(StaticDetail.SessionCart, _uow.ShoppingCart.GetAll(u => u.ApplicationUserId == cartDb.ApplicationUserId).Count() - 1);
                 _uow.ShoppingCart.Remove(cartDb);
             }
             else
@@ -74,6 +75,7 @@ namespace JersyHub.Areas.Customer.Controllers
         public IActionResult Remove(int cartId)
         {
             var cartDb = _uow.ShoppingCart.Get(u => u.Id == cartId);
+            HttpContext.Session.SetInt32(StaticDetail.SessionCart, _uow.ShoppingCart.GetAll(u => u.ApplicationUserId == cartDb.ApplicationUserId).Count() - 1);
             _uow.ShoppingCart.Remove(cartDb);
             _uow.Save();
             return RedirectToAction("Index");
