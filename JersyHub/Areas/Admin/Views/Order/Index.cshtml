@@ -6,6 +6,11 @@
         <div class="col-6">
             <h2 class="text-primary">Order List</h2>
         </div>
+        <div class="col-6 text-end">
+            <button id="exportButton" class="btn btn-success">
+                <i class="bi bi-file-earmark-excel"></i> Export to Excel
+            </button>
+        </div>
     </div>
 
     <!-- DataGrid Container -->
@@ -16,13 +21,14 @@
     $(document).ready(function () {
         var orders = @Html.Raw(Json.Serialize(Model)); // Convert Model to JSON
 
-        $("#orderGrid").dxDataGrid({
+        var dataGrid=$("#orderGrid").dxDataGrid({
             dataSource: orders,
             showBorders: true,
             columnAutoWidth: true,
             paging: { pageSize: 10 },
             headerFilter: { visible: true },
             searchPanel: { visible: true, width: 240, placeholder: "Search..." },
+            export:{enabled:true},
 
             columns: [
                 { dataField: "orderHeader.id", caption: "ID" },
@@ -31,10 +37,12 @@
                 { dataField: "orderHeader.applicationUser.email", caption: "Email" }, // Nested property
                 { dataField: "orderHeader.orderStatus", caption: "Status" },
                 { dataField: "orderHeader.orderTotal", caption: "Total", },
+                {dataField: "orderHeader.orderDate", caption: "Order Date",dataType: "date",format: "yyyy-MM-dd" },
                 {
                     caption: "Actions",
                     width: 200,
                     alignment: "center",
+                    export: { visible: false },
                     cellTemplate: function (container, options) {
                         var id = options.data.orderHeader.id;
 
@@ -47,7 +55,30 @@
                     }
                 }
             ]
+        }).dxDataGrid("instance");
+
+        $("#exportButton").on("click",function(){
+            exportData();
         });
+
+        function exportData(){
+            var workbook= new ExcelJS.Workbook();
+            var worksheet = workbook.addWorksheet("Orders");
+
+
+            DevExpress.excelExporter.exportDataGrid({
+                component: dataGrid,
+                worksheet: worksheet,
+                autoFilterEnabled: true,
+                selectedRowsOnly:false
+            }).then(function(){
+                workbook.xlsx.writeBuffer().then(function(buffer){
+                    saveAs(new Blob([buffer],{type:"application/octet-stream"}), "Orders.xlsx");
+                });
+            });
+            
+        }
+
     });
 </script>
 
