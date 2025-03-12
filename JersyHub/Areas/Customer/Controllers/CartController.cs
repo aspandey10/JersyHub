@@ -15,12 +15,15 @@ namespace JersyHub.Areas.Customer.Controllers
     public class CartController : Controller
     { 
         private readonly IUnitOfWork _uow;
-        [BindProperty]
-        public ShoppingCartVM ShoppingCartVM { get; set; }
+        private readonly IAppEmailSender _emailsender;
 
-        public CartController(IUnitOfWork uow)
+        [BindProperty] 
+        public ShoppingCartVM shoppingCartVM { get; set; }
+
+        public CartController(IUnitOfWork uow, IAppEmailSender emailsender) 
         {
             _uow = uow;
+            _emailsender = emailsender;
         }
 
 
@@ -29,20 +32,20 @@ namespace JersyHub.Areas.Customer.Controllers
             var claimsIdentity = (ClaimsIdentity)User.Identity;
             var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
 
-            ShoppingCartVM = new()
+            shoppingCartVM = new()
             {
                 ShoppingCartList = _uow.ShoppingCart.GetAll(u => u.ApplicationUserId == userId, includeProperties: "Product"),
                 OrderHeader = new()
             }; 
             
-            foreach (var cart in ShoppingCartVM.ShoppingCartList)
+            foreach (var cart in shoppingCartVM.ShoppingCartList)
             {
                 cart.Price = cart.Product.Price;
 
-                ShoppingCartVM.OrderHeader.OrderTotal += (cart.Price * cart.Count);
+                shoppingCartVM.OrderHeader.OrderTotal += (cart.Price * cart.Count);
             } 
 
-            return View(ShoppingCartVM);
+            return View(shoppingCartVM);
         }
 
         public IActionResult Plus(int cartId)
@@ -86,25 +89,25 @@ namespace JersyHub.Areas.Customer.Controllers
             var claimsIdentity = (ClaimsIdentity)User.Identity;
             var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
 
-            ShoppingCartVM = new()
+            shoppingCartVM = new()
             {
                 ShoppingCartList = _uow.ShoppingCart.GetAll(u => u.ApplicationUserId == userId, includeProperties: "Product"),
                 OrderHeader = new()
             };
 
-            ShoppingCartVM.OrderHeader.ApplicationUser = _uow.ApplicationUser.Get(u => u.Id == userId);
-            ShoppingCartVM.OrderHeader.Name = ShoppingCartVM.OrderHeader.ApplicationUser.Name;  
-            ShoppingCartVM.OrderHeader.StreetAddress = ShoppingCartVM.OrderHeader.ApplicationUser.Address;
-            ShoppingCartVM.OrderHeader.PhoneNumber= ShoppingCartVM.OrderHeader.ApplicationUser.PhoneNumber; 
+            shoppingCartVM.OrderHeader.ApplicationUser = _uow.ApplicationUser.Get(u => u.Id == userId);
+            shoppingCartVM.OrderHeader.Name = shoppingCartVM.OrderHeader.ApplicationUser.Name;  
+            shoppingCartVM.OrderHeader.StreetAddress = shoppingCartVM.OrderHeader.ApplicationUser.Address;
+            shoppingCartVM.OrderHeader.PhoneNumber= shoppingCartVM.OrderHeader.ApplicationUser.PhoneNumber; 
 
 
-            foreach (var cart in ShoppingCartVM.ShoppingCartList)
+            foreach (var cart in shoppingCartVM.ShoppingCartList)
             {
                 cart.Price = cart.Product.Price;
 
-                ShoppingCartVM.OrderHeader.OrderTotal += (cart.Price * cart.Count);
+                shoppingCartVM.OrderHeader.OrderTotal += (cart.Price * cart.Count);
             }
-            return View(ShoppingCartVM);
+            return View(shoppingCartVM);
         }
         [HttpPost]
         [ActionName("CheckOut")]
@@ -113,36 +116,36 @@ namespace JersyHub.Areas.Customer.Controllers
             var claimsIdentity = (ClaimsIdentity)User.Identity;
             var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
 
-            ShoppingCartVM.ShoppingCartList = _uow.ShoppingCart.GetAll(u => u.ApplicationUserId == userId, includeProperties: "Product");
-            ShoppingCartVM.OrderHeader.OrderDate = System.DateTime.Now;
-            ShoppingCartVM.OrderHeader.ApplicationUserId = userId;
+            shoppingCartVM.ShoppingCartList = _uow.ShoppingCart.GetAll(u => u.ApplicationUserId == userId, includeProperties: "Product");
+            shoppingCartVM.OrderHeader.OrderDate = System.DateTime.Now;
+            shoppingCartVM.OrderHeader.ApplicationUserId = userId;
 
 
-            ShoppingCartVM.OrderHeader.ApplicationUser = _uow.ApplicationUser.Get(u => u.Id == userId);
-            ShoppingCartVM.OrderHeader.Name = ShoppingCartVM.OrderHeader.ApplicationUser.Name;
-            ShoppingCartVM.OrderHeader.StreetAddress = ShoppingCartVM.OrderHeader.ApplicationUser.Address;
-            ShoppingCartVM.OrderHeader.PhoneNumber = ShoppingCartVM.OrderHeader.ApplicationUser.PhoneNumber;
+            shoppingCartVM.OrderHeader.ApplicationUser = _uow.ApplicationUser.Get(u => u.Id == userId);
+            shoppingCartVM.OrderHeader.Name = shoppingCartVM.OrderHeader.ApplicationUser.Name;
+            shoppingCartVM.OrderHeader.StreetAddress = shoppingCartVM.OrderHeader.ApplicationUser.Address;
+            shoppingCartVM.OrderHeader.PhoneNumber = shoppingCartVM.OrderHeader.ApplicationUser.PhoneNumber;
 
 
 
-            foreach (var cart in ShoppingCartVM.ShoppingCartList)
+            foreach (var cart in shoppingCartVM.ShoppingCartList)
             {
                 cart.Price = cart.Product.Price;
 
-                ShoppingCartVM.OrderHeader.OrderTotal += (cart.Price * cart.Count);
+                shoppingCartVM.OrderHeader.OrderTotal += (cart.Price * cart.Count);
             }
-            ShoppingCartVM.OrderHeader.PaymentStatus = StaticDetail.PaymentStatusPending;
-            ShoppingCartVM.OrderHeader.OrderStatus = StaticDetail.StatusPending;
+            shoppingCartVM.OrderHeader.PaymentStatus = StaticDetail.PaymentStatusPending;
+            shoppingCartVM.OrderHeader.OrderStatus = StaticDetail.StatusPending;
 
-            _uow.OrderHeader.Add(ShoppingCartVM.OrderHeader);
+            _uow.OrderHeader.Add(shoppingCartVM.OrderHeader);
             _uow.Save();
 
-            foreach (var cart in ShoppingCartVM.ShoppingCartList)
+            foreach (var cart in shoppingCartVM.ShoppingCartList)
             {
                 OrderDetail orderDetail = new()
                 {
                     ProductId = cart.ProductId,
-                    OrderHeaderId = ShoppingCartVM.OrderHeader.Id,
+                    OrderHeaderId = shoppingCartVM.OrderHeader.Id,
                     Price = cart.Price,
                     Count = cart.Count
                 };
@@ -153,21 +156,21 @@ namespace JersyHub.Areas.Customer.Controllers
             var options = new Stripe.Checkout.SessionCreateOptions
             {
 
-                SuccessUrl = domain + $"customer/cart/OrderConfirmation?id={ShoppingCartVM.OrderHeader.Id}",
+                SuccessUrl = domain + $"customer/cart/OrderConfirmation?id={shoppingCartVM.OrderHeader.Id}",
                 CancelUrl = domain + "customer/cart/Index",
                 LineItems = new List<Stripe.Checkout.SessionLineItemOptions>(),
 
                 Mode = "payment",
             };
 
-            foreach (var item in ShoppingCartVM.ShoppingCartList)
+            foreach (var item in shoppingCartVM.ShoppingCartList)
             {
                 var sessionLineItem = new Stripe.Checkout.SessionLineItemOptions
                 {
                     PriceData = new Stripe.Checkout.SessionLineItemPriceDataOptions
                     {
                         UnitAmount = (long)item.Price * 100,
-                        Currency = "usd",
+                        Currency = "inr",
                         ProductData = new Stripe.Checkout.SessionLineItemPriceDataProductDataOptions
                         {
                             Name = item.Product.ProductName,
@@ -180,7 +183,7 @@ namespace JersyHub.Areas.Customer.Controllers
 
             var service = new Stripe.Checkout.SessionService();
             Session session = service.Create(options); 
-            _uow.OrderHeader.UpdateStripePaymentId(ShoppingCartVM.OrderHeader.Id, session.Id, session.PaymentIntentId);
+            _uow.OrderHeader.UpdateStripePaymentId(shoppingCartVM.OrderHeader.Id, session.Id, session.PaymentIntentId);
             _uow.Save();
             Response.Headers.Add("Location",session.Url);
             return new StatusCodeResult(303);
@@ -190,7 +193,7 @@ namespace JersyHub.Areas.Customer.Controllers
         }
 
 
-        public IActionResult OrderConfirmation(int id)
+        public async Task<IActionResult> OrderConfirmationAsync(int id)
         {
             OrderHeader orderHeader = _uow.OrderHeader.Get(u => u.Id == id,includeProperties:"ApplicationUser");
             var service = new SessionService();
@@ -206,6 +209,13 @@ namespace JersyHub.Areas.Customer.Controllers
             List<ShoppingCart> shoppingCarts = _uow.ShoppingCart.GetAll(u => u.ApplicationUserId == orderHeader.ApplicationUserId).ToList();
             _uow.ShoppingCart.RemoveRange(shoppingCarts);
             _uow.Save();
+
+            // Send Order Confirmation Email
+            string customerEmail = orderHeader.ApplicationUser.Email;
+            string subject = "Order Confirmation - JersyHub";
+            string body = $"<h2>Thank you for your order!</h2><p>Your order #{id} has been successfully placed.</p>";
+
+            await _emailsender.SendEmailAsync(customerEmail, subject, body);
 
             return View(id);
         }

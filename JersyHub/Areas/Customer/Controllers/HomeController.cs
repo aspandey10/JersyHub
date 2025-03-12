@@ -1,4 +1,4 @@
-using JersyHub.Application.Repository.IRepository;
+ using JersyHub.Application.Repository.IRepository;
 using JersyHub.Data;
 using JersyHub.Domain.Entities;
 using JersyHub.Infrastructure.Repo;

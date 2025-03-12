@@ -1,4 +1,4 @@
-﻿ using JersyHub.Domain.Entities;
+﻿  using JersyHub.Domain.Entities;
 
 namespace JersyHub.Models.ViewModel
 {

@@ -27,7 +27,8 @@ builder.Services.AddSession(options =>
 }
     );
 builder.Services.AddScoped<IUnitOfWork,UnitOfWork>();
-builder.Services.AddScoped<IEmailSender,EmailSender>();     
+builder.Services.AddScoped<IEmailSender, EmailSender>();
+builder.Services.AddScoped<IAppEmailSender, AppEmailSender>();
 var app = builder.Build(); 
 
 // Configure the HTTP request pipeline. 

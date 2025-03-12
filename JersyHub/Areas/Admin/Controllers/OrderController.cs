@@ -10,7 +10,7 @@ using System.Security.Claims;
 
 namespace JersyHub.Areas.Admin.Controllers
 {
-    [Area("Admin")]
+    [Area("Admin")]  
     [Authorize]
     public class OrderController : Controller
     {

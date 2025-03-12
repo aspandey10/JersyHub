@@ -41,5 +41,6 @@ namespace JersyHub.Domain.Entities
         public string State { get; set; }
         [Required]
         public string NearestLandmark { get; set; }
+
     }
 }
