@@ -54,7 +54,25 @@
                             .appendTo(container);
                     }
                 }
-            ]
+            ],
+
+           onRowPrepared: function (e) {
+                if (e.rowType == "data") { 
+                var status = e.data.orderHeader.orderStatus; 
+
+            
+            if (status == "Approved") {
+                e.rowElement.css("background-color", "#d4edda"); 
+            } else if (status == "Pending") {
+                e.rowElement.css("background-color", "#fff3cd"); 
+            } else if (status == "Cancelled") {
+                e.rowElement.css("background-color", "#f8d7da");
+            }
+        }
+    }
+
+
+
         }).dxDataGrid("instance");
 
         $("#exportButton").on("click",function(){
