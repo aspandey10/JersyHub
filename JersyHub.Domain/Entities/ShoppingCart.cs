@@ -28,5 +28,6 @@ namespace JersyHub.Domain.Entities
         public double Price { get; set; }
 
         public DateTime AddedDate { get; set; }
+        public DateTime LastEmail { get; set; }
     }
 }

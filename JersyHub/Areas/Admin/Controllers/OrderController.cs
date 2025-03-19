@@ -42,13 +42,21 @@ namespace JersyHub.Areas.Admin.Controllers
                 List<ShoppingCart> mylist = _uow.ShoppingCart.GetAll().ToList();
                 foreach (var item in mylist)
                 {
+                    
                     if (item.AddedDate.AddDays(3) <= DateTime.Now)
                     {
-                        var user = _uow.ApplicationUser.Get(u => u.Id == item.ApplicationUserId);
-                        var email = user.Email;
-                        var subject = "Order Pending";
-                        var body = "Hey! You still have items in your cart. Let's shop.";
-                        await _emailsender.SendEmailAsync(email, subject, body);
+                        if(item.LastEmail==DateTime.MinValue ||  item.LastEmail.AddDays(1) <= DateTime.Now)
+                        {
+                            var user = _uow.ApplicationUser.Get(u => u.Id == item.ApplicationUserId);
+                            var email = user.Email;
+                            var subject = "Order Pending";
+                            var body = "Hey! You still have items in your cart. Let's shop.";
+                            await _emailsender.SendEmailAsync(email, subject, body);
+                            item.LastEmail = System.DateTime.Now;
+                            _uow.ShoppingCart.Update(item);
+                            _uow.Save();
+                        }
+                        
                     }
 
                 }
