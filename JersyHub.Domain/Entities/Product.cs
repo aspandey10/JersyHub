@@ -13,8 +13,7 @@ namespace JersyHub.Models
         public string ProductName { get; set; }
         [Required]
         public string ProductType { get; set; }
-        [Required]
-        public string Team { get; set; }
+        
         [Required]
         public string Edition{ get; set; }
         [Range(1800,2025)]

@@ -1,28 +1,96 @@
 ﻿@model IEnumerable<Product>
 
+<div class="container">
+    <div class="row g-4">
+        
+        @foreach (var product in Model)
+        {
+            if (product.ProductType == "Jersy")
+            {
+                <div class="col-lg-3 col-md-4 col-sm-6 d-flex">
+                    <div class="card border-0 shadow border-top border-5 rounded w-100">
+                        <div class="d-flex justify-content-center align-items-center bg-light" style="height: 200px;">
+                            <img src="@product.ImageUrl" class="img-fluid p-2" style="max-height: 100%;" />
+                        </div>
+                        <div class="card-body d-flex flex-column text-center">
+                            <h5 class="card-title text-dark opacity-75 text-uppercase flex-grow-1">@product.ProductName</h5>
+                            <p class="text-dark text-uppercase">Rs. @product.Price</p>
+                        </div>
+                        <div class="card-footer bg-white border-0">
+                            <a asp-action="Details" asp-controller="Home" asp-area="Customer" asp-route-productId="@product.Id"
+                               class="btn btn-primary bg-gradient border-0 w-100">Details</a>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+@* @model IEnumerable<Product>
+
 <div class="row pb-3">
     @foreach(var product in Model)
     {
-        <div class="col-lg-3 col-sm-6">
-            <div class="row p-2">
-                <div class="col-12" p-1>
-                     <div class="card border-0 p-3 shadow border-top border-5 rounded">
-                         <img src="@product.ImageUrl" class="card-img-top rounded" />
-                         <dv class="card-body pb-0">
-                             <div class="pl-1">
-                                 <p class="card-title h5 text-dark opacity-75 text-uppercase text-center">@product.ProductName</p>
-                                 <p class="card-title h5 text-dark opacity-75 text-uppercase text-center">@product.Team</p>
-                             </div>
-                            <div class="pl-1">
-                                <p class=" text-dark  text-uppercase text-center">Rs. @product.Price.</p>
+        if (product.ProductType == "Jersy")
+        {
+            <div class="col-lg-3 col-sm-6">
+                <div class="row p-2">
+                    <div class="col-12" p-1>
+                        <div class="card border-0 p-3 shadow border-top border-5 rounded">
+                            <img src="@product.ImageUrl" class="card-img-top rounded" />
+                            <dv class="card-body pb-0">
+                                <div class="pl-1">
+                                    <p class="card-title h5 text-dark opacity-75 text-uppercase text-center">@product.ProductName</p>
+
+                                </div>
+                                <div class="pl-1">
+                                    <p class=" text-dark  text-uppercase text-center">Rs. @product.Price.</p>
+                                </div>
+                            </dv>
+                            <div>
+                                <a asp-action="Details" asp-controller="Home" asp-area="Customer" asp-route-productId="@product.Id" class="btn btn-primary bg-gradient border-0 form-control">Details</a>
                             </div>
-                         </dv>
-                         <div>
-                             <a asp-action="Details" asp-controller="Home" asp-area="Customer" asp-route-productId="@product.Id" class="btn btn-primary bg-gradient border-0 form-control" >Details</a>
-                         </div>
-                     </div>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
+        }
+        
     }
-</div>
+</div> *@

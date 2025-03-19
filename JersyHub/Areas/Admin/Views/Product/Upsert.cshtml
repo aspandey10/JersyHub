@@ -29,17 +29,11 @@
                     <span asp-validation-for="Product.ProductType" class="text-danger"></span>
                 </div>
 
-                <!-- Team -->
-                <div class="mb-3">
-                    <label for="teamField">Team</label>
-                    <div id="teamField"></div>
-                    <input type="hidden" id="teamInput" name="Product.Team" value="@Model.Product.Team" />
-                    <span asp-validation-for="Product.Team" class="text-danger"></span>
-                </div>
+                
 
                 <!-- Category (League) -->
                 <div class="mb-3">
-                    <label for="categoryField">League</label>
+                    <label for="categoryField">Team</label>
                     <div id="categoryField"></div>
                     <input type="hidden" id="categoryInput" name="Product.CategoryId" value="@Model.Product.CategoryId" />
                     
@@ -123,15 +117,7 @@
                 }
             });
 
-            // Team
-            $("#teamField").dxTextBox({
-                value: '@Model.Product.Team',
-                placeholder: 'Enter team name',
-                showClearButton: true,
-                onValueChanged: function (e) {
-                    $("#teamInput").val(e.value);
-                }
-            });
+            
 
             // Category (League)
             $("#categoryField").dxSelectBox({
