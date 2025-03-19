@@ -55,6 +55,10 @@ namespace JersyHub.Areas.Customer.Controllers
             var claimsIdentity = (ClaimsIdentity)User.Identity;
             var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
             shoppingCart.ApplicationUserId = userId;
+            
+            shoppingCart.AddedDate = System.DateTime.Now;
+
+            
 
             ShoppingCart cartDb = uow.ShoppingCart.Get(u => u.ApplicationUserId == userId && u.ProductId == shoppingCart.ProductId);
             if(cartDb == null)

@@ -1,4 +1,5 @@
 ﻿@using JersyHub.Models.ViewModel
+@using JersyHub.Infrastructure.Data
 @model IEnumerable<OrderVM>
 
 <div class="container">
@@ -19,7 +20,7 @@
 
 <script>
     $(document).ready(function () {
-        var orders = @Html.Raw(Json.Serialize(Model)); // Convert Model to JSON
+        var orders = @Html.Raw(Json.Serialize(Model)); 
 
         var dataGrid=$("#orderGrid").dxDataGrid({
             dataSource: orders,
@@ -34,7 +35,7 @@
                 { dataField: "orderHeader.id", caption: "ID" },
                 { dataField: "orderHeader.name", caption: "Customer Name" },
                 { dataField: "orderHeader.phoneNumber", caption: "Phone Number" },
-                { dataField: "orderHeader.applicationUser.email", caption: "Email" }, // Nested property
+                { dataField: "orderHeader.applicationUser.email", caption: "Email" }, 
                 { dataField: "orderHeader.orderStatus", caption: "Status" },
                 { dataField: "orderHeader.orderTotal", caption: "Total", },
                 {dataField: "orderHeader.orderDate", caption: "Order Date",dataType: "date",format: "yyyy-MM-dd" },

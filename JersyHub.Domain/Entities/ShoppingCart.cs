@@ -26,5 +26,7 @@ namespace JersyHub.Domain.Entities
 
         [NotMapped]
         public double Price { get; set; }
+
+        public DateTime AddedDate { get; set; }
     }
 }
