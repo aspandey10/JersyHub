@@ -1,5 +1,6 @@
 ﻿using JersyHub.Domain.Entities;
 using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+using Microsoft.Identity.Client;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -28,6 +29,10 @@ namespace JersyHub.Models
 
         [ValidateNever]
         public string? ImageUrl { get; set; }
+
+        public double DiscountPercent { get; set; }
+        public double DiscountedPrice { get; set; }
+
 
 
 

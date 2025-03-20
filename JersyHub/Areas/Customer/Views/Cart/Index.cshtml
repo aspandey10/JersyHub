@@ -32,12 +32,25 @@
                                 <h5 class="text-uppercase text-secondary"><strong>@item.Product.ProductName</strong></h5>
                             </div>
                             <div class="col-12  col-lg-5 text-center row">
-                                <div class="col-3 text-md-right pt-2 pt-md-4">
-                                    <h6 class="fw-semibold">
-                                        @item.Price
-                                        <span class="text-muted">&nbsp;x&nbsp;</span>@item.Count
-                                    </h6>
-                                </div>
+                                @if (item.Product.DiscountPercent > 0)
+                                {
+                                    <div class="col-3 text-md-right pt-2 pt-md-4">
+                                        <h6 class="fw-semibold">
+                                            @item.Product.DiscountedPrice
+                                            <span class="text-muted">&nbsp;x&nbsp;</span>@item.Count
+                                        </h6>
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div class="col-3 text-md-right pt-2 pt-md-4">
+                                        <h6 class="fw-semibold">
+                                            @item.Price
+                                            <span class="text-muted">&nbsp;x&nbsp;</span>@item.Count
+                                        </h6>
+                                    </div>
+                                }
+                                
                                 <div class="col-6 col-sm-4 col-lg-6 pt-2">
                                     <div class="w-75 btn-group" role="group">
                                         <a asp-action="Plus" asp-route-cartId="@item.Id" class="btn btn-outline-primary bg-gradient py-2">

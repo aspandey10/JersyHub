@@ -4,6 +4,8 @@
 <form method="post" enctype="multipart/form-data">
     <input asp-for="Product.Id" hidden />
     <input asp-for="Product.ImageUrl" hidden>
+    <input type="hidden" id="discountPriceInput" name="Product.DiscountedPrice" value="@Model.Product.DiscountedPrice" />
+
 
     <div class="border p-3 mt-4">
 
@@ -62,6 +64,20 @@
                     <div id="priceField"></div>
                     <input type="hidden" id="priceInput" name="Product.Price" value="@Model.Product.Price" />
                     <span asp-validation-for="Product.Price" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label for="discountField">Discount Rate</label>
+                    <div id="discountField"></div>
+                    <input type="hidden" id="discountInput" name="Product.DiscountPercent" value="@Model.Product.DiscountPercent" />
+                    <span asp-validation-for="Product.DiscountPercent" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label for="discountPriceField">Discounted Price</label>
+                    <div id="discountPriceField"></div>
+                    <input type="hidden" id="discountPriceInput" name="Product.DiscountedPrice" value="@Model.Product.DiscountedPrice" />
+                    <span asp-validation-for="Product.DiscountedPrice" class="text-danger"></span>
                 </div>
 
                 <!-- Image URL -->
@@ -163,6 +179,27 @@
                     $("#priceInput").val(e.value);
                 }
             });
+            $("#discountField").dxNumberBox({
+                value: '@Model.Product.DiscountPercent',
+                min: 0,
+                showClearButton: true,
+                placeholder: 'Enter Discount Rate',
+                    onValueChanged: function (e) {
+            var price = $("#priceField").dxNumberBox("instance").option("value");
+            var discountPercent = e.value;
+
+            // Calculate Discounted Price
+            var discountedPrice = price - ((discountPercent / 100) * price);
+
+            // Update the discounted price field
+            $("#discountPriceField").dxNumberBox("instance").option("value", discountedPrice);
+             $("#discountPriceInput").val(discountedPrice);
+
+            // Also update the hidden input field for form submission
+            $("#discountPriceInput").val(discountedPrice);
+        }
+            });
+            
         });
     </script>
 }

@@ -88,13 +88,27 @@
 							<ul class="list-group mb-3">
 								@foreach(var details in Model.ShoppingCartList)
 								{
-									<li class="list-group-item d-flex justify-content-between">
-										<div>
-											<h6 class="my-0">@details.Product.ProductName</h6>
-											<small class="text-muted">Quantity: @details.Count</small>
-										</div>
-										<span class="text-muted">@((details.Price*details.Count).ToString()) </span>
-									</li>
+									@if (details.Product.DiscountPercent > 0)
+									{
+										<li class="list-group-item d-flex justify-content-between">
+											<div>
+												<h6 class="my-0">@details.Product.ProductName</h6>
+												<small class="text-muted">Quantity: @details.Count</small>
+											</div>
+											<span class="text-muted">@((details.Product.DiscountedPrice * details.Count).ToString()) </span>
+										</li>
+									}
+									else
+									{
+										<li class="list-group-item d-flex justify-content-between">
+											<div>
+												<h6 class="my-0">@details.Product.ProductName</h6>
+												<small class="text-muted">Quantity: @details.Count</small>
+											</div>
+											<span class="text-muted">@((details.Price * details.Count).ToString()) </span>
+										</li>
+									}
+									
 								}
 								
 

@@ -40,7 +40,16 @@ namespace JersyHub.Areas.Customer.Controllers
             
             foreach (var cart in shoppingCartVM.ShoppingCartList)
             {
-                cart.Price = cart.Product.Price;
+                if (cart.Product.DiscountPercent > 0)
+                {
+                    cart.Price = cart.Product.DiscountedPrice;
+
+                }
+                else
+                {
+                    cart.Price = cart.Product.Price;
+
+                }
                 shoppingCartVM.OrderHeader.OrderTotal += (cart.Price * cart.Count);
             }
             var categoryIds = shoppingCartVM.ShoppingCartList.Select(c => c.Product.CategoryId).Distinct().ToList();
@@ -53,7 +62,7 @@ namespace JersyHub.Areas.Customer.Controllers
             return View(shoppingCartVM);
         }
 
-        public IActionResult Plus(int cartId)
+        public IActionResult Plus(int cartId) 
         {
             var cartDb = _uow.ShoppingCart.Get(u => u.Id == cartId);
             cartDb.Count += 1;
@@ -108,7 +117,15 @@ namespace JersyHub.Areas.Customer.Controllers
 
             foreach (var cart in shoppingCartVM.ShoppingCartList)
             {
-                cart.Price = cart.Product.Price;
+                if (cart.Product.DiscountPercent > 0)
+                {
+                    cart.Price = cart.Product.DiscountedPrice;
+                }
+                else
+                {
+                    cart.Price = cart.Product.Price;
+
+                }
 
                 shoppingCartVM.OrderHeader.OrderTotal += (cart.Price * cart.Count);
             }
@@ -135,7 +152,16 @@ namespace JersyHub.Areas.Customer.Controllers
 
             foreach (var cart in shoppingCartVM.ShoppingCartList)
             {
-                cart.Price = cart.Product.Price;
+                if (cart.Product.DiscountPercent > 0)
+                {
+                    cart.Price = cart.Product.DiscountedPrice;
+
+                }
+                else
+                {
+                    cart.Price = cart.Product.Price;
+
+                }
 
                 shoppingCartVM.OrderHeader.OrderTotal += (cart.Price * cart.Count);
             }

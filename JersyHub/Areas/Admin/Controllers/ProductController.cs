@@ -74,6 +74,10 @@ namespace JersyHub.Areas.Admin.Controllers
                       
                     obj.Product.ImageUrl = @"\images\product\" + fileName;
                 }
+                if(obj.Product.DiscountPercent > 0)
+                {
+                    obj.Product.DiscountedPrice = obj.Product.Price - (obj.Product.Price *( obj.Product.DiscountPercent / 100));
+                }
                 if (obj.Product.Id == 0)
                 {
                     _uow.Product.Add(obj.Product);
