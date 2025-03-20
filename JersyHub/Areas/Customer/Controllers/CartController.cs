@@ -34,16 +34,21 @@ namespace JersyHub.Areas.Customer.Controllers
 
             shoppingCartVM = new()
             {
-                ShoppingCartList = _uow.ShoppingCart.GetAll(u => u.ApplicationUserId == userId, includeProperties: "Product"),
+                ShoppingCartList = _uow.ShoppingCart.GetAll(u => u.ApplicationUserId == userId, includeProperties: "Product,Product.Category"),
                 OrderHeader = new()
             }; 
             
             foreach (var cart in shoppingCartVM.ShoppingCartList)
             {
                 cart.Price = cart.Product.Price;
-
                 shoppingCartVM.OrderHeader.OrderTotal += (cart.Price * cart.Count);
-            } 
+            }
+            var categoryIds = shoppingCartVM.ShoppingCartList.Select(c => c.Product.CategoryId).Distinct().ToList();
+
+            var similarProducts = _uow.Product.GetAll(p => categoryIds.Contains(p.CategoryId) &&!shoppingCartVM.ShoppingCartList.Select(c => c.ProductId).Contains(p.Id),includeProperties: "Category")
+            .ToList();
+
+            shoppingCartVM.SimilarProducts = similarProducts;
 
             return View(shoppingCartVM);
         }

@@ -6,5 +6,7 @@ namespace JersyHub.Models.ViewModel
     {
         public IEnumerable<ShoppingCart> ShoppingCartList { get; set; }
         public OrderHeader OrderHeader { get; set; }
+        public IEnumerable<Product> SimilarProducts { get; set; }
+
     }
 }
