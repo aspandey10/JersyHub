@@ -7,6 +7,7 @@
     <input type="hidden" id="discountPriceInput" name="Product.DiscountedPrice" value="@Model.Product.DiscountedPrice" />
 
 
+
     <div class="border p-3 mt-4">
 
         <div class="row pb-2">
@@ -185,20 +186,30 @@
                 showClearButton: true,
                 placeholder: 'Enter Discount Rate',
                     onValueChanged: function (e) {
-            var price = $("#priceField").dxNumberBox("instance").option("value");
-            var discountPercent = e.value;
+                    var price = $("#priceField").dxNumberBox("instance").option("value");
+                    var discountPercent = e.value;
 
-            // Calculate Discounted Price
-            var discountedPrice = price - ((discountPercent / 100) * price);
+                    // Calculate Discounted Price
+                    var discountedPrice = price - ((discountPercent / 100) * price);
 
-            // Update the discounted price field
-            $("#discountPriceField").dxNumberBox("instance").option("value", discountedPrice);
-             $("#discountPriceInput").val(discountedPrice);
+                    // Update the discounted price field
+                    $("#discountPriceField").dxNumberBox("instance").option("value", discountedPrice);
 
-            // Also update the hidden input field for form submission
-            $("#discountPriceInput").val(discountedPrice);
-        }
+                    // Also update the hidden input field for form submission
+                    $("#discountPriceInput").val(discountedPrice);
+
+                    $("#discountInput").val(e.value);
+                }
             });
+            $("#discountPriceField").dxNumberBox({
+            value: '@Model.Product.Price - ((@Model.Product.DiscountPercent)/100)*@Model.Product.Price',
+            min: 0,
+            showClearButton: true,
+            placeholder: 'Discounted Price',
+            onValueChanged: function (e) {
+                $("#discountPriceInput").val(e.value);
+            }
+        });
             
         });
     </script>
