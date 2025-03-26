@@ -1,15 +1,21 @@
+using Hangfire;
+using JersyHub.Application.Repository.IRepository;
+using JersyHub.Application.Services;
 using JersyHub.Data;
-using Microsoft.EntityFrameworkCore;
+using JersyHub.Infrastructure.Data;
+using JersyHub.Infrastructure.Repo;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
-using JersyHub.Infrastructure.Repo;
-using JersyHub.Application.Repository.IRepository;
-using JersyHub.Infrastructure.Data;
+using Microsoft.EntityFrameworkCore;
 using Stripe;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+
+builder.Services.AddHangfire(configuration =>
+    configuration.UseSqlServerStorage(builder.Configuration.GetConnectionString("dbcs"))); 
+
+builder.Services.AddHangfireServer();
 builder.Services.AddControllersWithViews();
 
 
@@ -29,7 +35,10 @@ builder.Services.AddSession(options =>
 builder.Services.AddScoped<IUnitOfWork,UnitOfWork>();
 builder.Services.AddScoped<IEmailSender, EmailSender>();
 builder.Services.AddScoped<IAppEmailSender, AppEmailSender>();
-var app = builder.Build(); 
+builder.Services.AddScoped<EmailRemainderService>();
+var app = builder.Build();
+
+
 
 // Configure the HTTP request pipeline. 
 if (!app.Environment.IsDevelopment())
@@ -45,6 +54,7 @@ app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
 app.UseSession();
+app.UseHangfireDashboard();
 app.MapRazorPages();
 app.MapStaticAssets();
 
@@ -53,5 +63,14 @@ app.MapControllerRoute(
     pattern: "{area=Customer}/{controller=Home}/{action=Index}/{id?}")
     .WithStaticAssets();
 
+using (var scope = app.Services.CreateScope())
+{
+    var emailReminderService = scope.ServiceProvider.GetRequiredService<EmailRemainderService>();
 
+    RecurringJob.AddOrUpdate(
+    "send-cart-reminder", 
+    () => emailReminderService.SendReminderEmails(),
+     "0 0 */3 * *" 
+);
+}
 app.Run();

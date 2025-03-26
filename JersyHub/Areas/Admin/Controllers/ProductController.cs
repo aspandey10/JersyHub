@@ -1,12 +1,13 @@
-﻿using JersyHub.Data;
+﻿using JersyHub.Application.Repository.IRepository;
+using JersyHub.Data;
+using JersyHub.Data;
+using JersyHub.Domain.Entities;
 using JersyHub.Models;
 using JersyHub.Models.ViewModel;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Logging.Abstractions;
-using JersyHub.Data;
-using JersyHub.Application.Repository.IRepository;
 
 namespace JersyHub.Areas.Admin.Controllers
 {
@@ -17,11 +18,13 @@ namespace JersyHub.Areas.Admin.Controllers
     {
         public IUnitOfWork _uow;
         private readonly IWebHostEnvironment _webHostEnvironment;
+        private readonly IAppEmailSender _emailSender;
 
-        public ProductController(IUnitOfWork uow, IWebHostEnvironment webHostEnvironment)
+        public ProductController(IUnitOfWork uow, IWebHostEnvironment webHostEnvironment,IAppEmailSender emailSender)
         {
             _uow = uow;
             _webHostEnvironment = webHostEnvironment;
+            _emailSender = emailSender;
         }
 
 
@@ -58,7 +61,7 @@ namespace JersyHub.Areas.Admin.Controllers
 
         }
         [HttpPost]
-        public IActionResult Upsert(ProductVM obj, IFormFile? file)
+        public async Task<IActionResult> UpsertAsync(ProductVM obj, IFormFile? file)
         {
             if (ModelState.IsValid)
             {
@@ -74,22 +77,37 @@ namespace JersyHub.Areas.Admin.Controllers
                       
                     obj.Product.ImageUrl = @"\images\product\" + fileName;
                 }
-                if(obj.Product.DiscountPercent > 0)
+                if (obj.Product.DiscountPercent > 0)
                 {
-                    obj.Product.DiscountedPrice = obj.Product.Price - (obj.Product.Price *( obj.Product.DiscountPercent / 100));
+                    List<ShoppingCart> shoppingCarts = _uow.ShoppingCart.GetAll().ToList();
+                    foreach (var cart in shoppingCarts)
+                    {
+                        if (cart.ProductId == obj.Product.Id)
+                        {
+                            var user = _uow.ApplicationUser.Get(u => u.Id == cart.ApplicationUserId);
+                            var email = user.Email;
+                            var subject = "Discount Alert";
+                            var body = "Hey!There is a discount in the product that is in your cart.check it out";
+
+                            await _emailSender.SendEmailAsync(email, subject, body);
+
+                            cart.LastEmail = DateTime.Now;
+                            _uow.ShoppingCart.Update(cart);
+                            _uow.Save();
+                        }
+                    }
                 }
+
                 if (obj.Product.Id == 0)
                 {
                     _uow.Product.Add(obj.Product);
                     TempData["success"] = "Product Created Successfully. ";
-
 
                 }
                 else
                 {
                     _uow.Product.Update(obj.Product);
                     TempData["success"] = "Product updated Successfully. ";
-
 
                 }
                 _uow.Save();

@@ -39,27 +39,27 @@ namespace JersyHub.Areas.Admin.Controllers
                 //Add Email Logic to Send Remainder emails to everyone whose order status is pending.
                 //Get all the users from shoppingCartDB and send emails to them whose o
 
-                List<ShoppingCart> mylist = _uow.ShoppingCart.GetAll().ToList();
-                foreach (var item in mylist)
-                {
-                    
-                    if (item.AddedDate.AddDays(3) <= DateTime.Now)
-                    {
-                        if(item.LastEmail==DateTime.MinValue ||  item.LastEmail.AddDays(1) <= DateTime.Now)
-                        {
-                            var user = _uow.ApplicationUser.Get(u => u.Id == item.ApplicationUserId);
-                            var email = user.Email;
-                            var subject = "Order Pending";
-                            var body = "Hey! You still have items in your cart. Let's shop.";
-                            await _emailsender.SendEmailAsync(email, subject, body);
-                            item.LastEmail = System.DateTime.Now;
-                            _uow.ShoppingCart.Update(item);
-                            _uow.Save();
-                        }
-                        
-                    }
+                //List<ShoppingCart> mylist = _uow.ShoppingCart.GetAll().ToList();
+                //foreach (var item in mylist)
+                //{
 
-                }
+                //    if (item.AddedDate.AddDays(3) <= DateTime.Now)
+                //    {
+                //        if (item.LastEmail == DateTime.MinValue || item.LastEmail.AddDays(1) <= DateTime.Now)
+                //        {
+                //            var user = _uow.ApplicationUser.Get(u => u.Id == item.ApplicationUserId);
+                //            var email = user.Email;
+                //            var subject = "Order Pending";
+                //            var body = "Hey! You still have items in your cart. Let's shop.";
+                //            await _emailsender.SendEmailAsync(email, subject, body);
+                //            item.LastEmail = System.DateTime.Now;
+                //            _uow.ShoppingCart.Update(item);
+                //            _uow.Save();
+                //        }
+
+                //    }
+
+                //}
 
 
 

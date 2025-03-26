@@ -202,14 +202,14 @@
                 }
             });
             $("#discountPriceField").dxNumberBox({
-            value: '@Model.Product.Price - ((@Model.Product.DiscountPercent)/100)*@Model.Product.Price',
-            min: 0,
-            showClearButton: true,
-            placeholder: 'Discounted Price',
-            onValueChanged: function (e) {
-                $("#discountPriceInput").val(e.value);
-            }
-        });
+                value: '@Model.Product.Price - ((@Model.Product.DiscountPercent)/100)*@Model.Product.Price',
+                min: 0,
+                showClearButton: true,
+                placeholder: 'Discounted Price',
+                onValueChanged: function (e) {
+                    $("#discountPriceInput").val(e.value);
+                }
+            });
             
         });
     </script>
