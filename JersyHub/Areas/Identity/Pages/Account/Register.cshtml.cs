@@ -120,28 +120,15 @@ namespace JersyHub.Areas.Identity.Pages.Account
 
         public async Task OnGetAsync(string returnUrl = null)
         {
-            if (!await _roleManager.RoleExistsAsync(StaticDetail.Role_Customer))
-            {
-                await _roleManager.CreateAsync(new IdentityRole(StaticDetail.Role_Customer));
-            }
             
-            
-            if (!await _roleManager.RoleExistsAsync(StaticDetail.Role_Admin))
-            {
-                await _roleManager.CreateAsync(new IdentityRole(StaticDetail.Role_Admin));
-            }
-            if (!await _roleManager.RoleExistsAsync(StaticDetail.Role_Employee))
-            {
-                await _roleManager.CreateAsync(new IdentityRole(StaticDetail.Role_Employee));
-            }
-            Input = new()
-            { 
-                RoleList = _roleManager.Roles.Select(x => x.Name).Select(i => new SelectListItem
-                {
-                    Text = i,
-                    Value = i
-                })
-            };
+            //Input = new()
+            //{ 
+            //    RoleList = _roleManager.Roles.Select(x => x.Name).Select(i => new SelectListItem
+            //    {
+            //        Text = i,
+            //        Value = i
+            //    })
+            //};
 
             ReturnUrl = returnUrl;
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();

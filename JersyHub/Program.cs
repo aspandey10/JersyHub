@@ -3,6 +3,7 @@ using JersyHub.Application.Repository.IRepository;
 using JersyHub.Application.Services;
 using JersyHub.Data;
 using JersyHub.Infrastructure.Data;
+
 using JersyHub.Infrastructure.Repo;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
@@ -32,6 +33,7 @@ builder.Services.AddSession(options =>
     options.Cookie.IsEssential = true;
 }
     );
+
 builder.Services.AddScoped<IUnitOfWork,UnitOfWork>();
 builder.Services.AddScoped<IEmailSender, EmailSender>();
 builder.Services.AddScoped<IAppEmailSender, AppEmailSender>();
@@ -54,14 +56,11 @@ app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
 app.UseSession();
+
 app.UseHangfireDashboard();
 app.MapRazorPages();
 app.MapStaticAssets();
 
-//app.MapControllerRoute(
-//    name: "Admin",
-//    pattern: "Admin/{controller=Order}/{action=Index}/{id?}",
-//    defaults: new { area = "Admin" });
 
 app.MapControllerRoute(
     name: "Customer",
@@ -79,3 +78,5 @@ using (var scope = app.Services.CreateScope())
 );
 }
 app.Run();
+
+
