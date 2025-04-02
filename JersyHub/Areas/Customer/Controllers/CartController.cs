@@ -245,10 +245,16 @@ namespace JersyHub.Areas.Customer.Controllers
             string customerEmail = orderHeader.ApplicationUser.Email;
             string subject = "Order Confirmation - JersyHub";
             string body = $"<h2>Thank you for your order!</h2><p>Your order #{id} has been successfully placed.</p>";
+            
+
 
             await _emailsender.SendEmailAsync(customerEmail, subject, body);
+            if (HttpContext?.Session != null)
+            {
+                HttpContext.Session.Clear();
+            }
 
-            return View(id);
+            return RedirectToAction("Index", "Order", new {area="Admin"});
         }
 
 

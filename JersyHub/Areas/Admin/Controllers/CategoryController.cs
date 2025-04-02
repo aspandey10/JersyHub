@@ -26,6 +26,7 @@ namespace JersyHub.Areas.Admin.Controllers
 
         public IActionResult Create()
         {
+            ViewBag.Countries = StaticDetail.Countries;
             return View();
         }
         [HttpPost]

@@ -58,8 +58,13 @@ app.UseHangfireDashboard();
 app.MapRazorPages();
 app.MapStaticAssets();
 
+//app.MapControllerRoute(
+//    name: "Admin",
+//    pattern: "Admin/{controller=Order}/{action=Index}/{id?}",
+//    defaults: new { area = "Admin" });
+
 app.MapControllerRoute(
-    name: "default",
+    name: "Customer",
     pattern: "{area=Customer}/{controller=Home}/{action=Index}/{id?}")
     .WithStaticAssets();
 

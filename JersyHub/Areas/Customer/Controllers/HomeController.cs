@@ -24,17 +24,41 @@ namespace JersyHub.Areas.Customer.Controllers
             this.uow = uow;
         }
 
-        public IActionResult Index()
+        public IActionResult Index(double? minPrice, double? maxPrice, List<int>? categoryIds)
         {
             var claimsIdentity = (ClaimsIdentity)User.Identity;
-            var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
+            var claim = claimsIdentity?.FindFirst(ClaimTypes.NameIdentifier);
             if (claim != null)
             {
-                HttpContext.Session.SetInt32(StaticDetail.SessionCart, uow.ShoppingCart.GetAll(u => u.ApplicationUserId == claim.Value).Count());
+                HttpContext.Session.SetInt32(StaticDetail.SessionCart,
+                    uow.ShoppingCart.GetAll(u => u.ApplicationUserId == claim.Value).Count());
             }
-            IEnumerable<Product > productList = uow.Product.GetAll(includeProperties: "Category");
-            return View(productList);
+
+            // Fetch products and categories
+            IEnumerable<Product> products = uow.Product.GetAll(includeProperties: "Category");
+            IEnumerable<Category> categories = uow.Category.GetAll();
+
+            // Apply price filtering
+            if (minPrice.HasValue && maxPrice.HasValue)
+            {
+                products = products.Where(p => p.Price >= minPrice && p.Price <= maxPrice);
+            }
+
+            // Apply category filtering
+            if (categoryIds != null && categoryIds.Count > 0)
+            {
+                products = products.Where(p => categoryIds.Contains(p.CategoryId));
+            }
+
+            ViewBag.Categories = categories; // Pass categories to the view
+            ViewBag.MinPrice = minPrice ?? 1000; // Default min price
+            ViewBag.MaxPrice = maxPrice ?? 50000; // Default max price
+            ViewBag.SelectedCategories = categoryIds ?? new List<int>(); // Preserve selected categories
+
+            return View(products);
         }
+
+
 
         public IActionResult Details(int productId)
         {

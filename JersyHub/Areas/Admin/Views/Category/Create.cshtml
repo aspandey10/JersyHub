@@ -1,6 +1,10 @@
 ﻿@using JersyHub.Domain.Entities
 @model Category
 
+@{
+    var countries= ViewBag.Countries as string[];
+}
+
 <form method="post" asp-action="Create">
     <div class="border p-3 mt-4">
         <div class="row pb-2">
@@ -35,20 +39,25 @@
     @await Html.PartialAsync("_ValidationScriptsPartial")
 
     <script>
+        var countries = @Html.Raw(Json.Serialize(ViewBag.Countries));
         $(function () {
             $("#nameField").dxTextBox({
                 placeholder: 'Enter category name',
                 showClearButton: true,
+             
                 onValueChanged: function (e) {
                     $("#nameInput").val(e.value); 
                 }
             });
 
-            $("#leagueCountryField").dxTextBox({
-                placeholder: 'Enter league country',
-                showClearButton: true,
+            $("#leagueCountryField").dxSelectBox({
+                dataSource: countries,
+                searchEnabled: true, // Enables searching within the dropdown
+                placeholder: 'Select a country',
+                showClearButton: true, // Option to clear the selection
+                
                 onValueChanged: function (e) {
-                    $("#leagueCountryInput").val(e.value); 
+                    $("#leagueCountryInput").val(e.value); // Save selected country to hidden input
                 }
             });
 
@@ -57,8 +66,9 @@
                 showSpinButtons: true,
                 min: 1,
                 max: 100,
+          
                 onValueChanged: function (e) {
-                    $("#displayOrderInput").val(e.value); 
+                    $("#displayOrderInput").val(e.value);
                 }
             });
         });
