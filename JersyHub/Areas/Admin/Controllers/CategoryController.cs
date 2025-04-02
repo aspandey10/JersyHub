@@ -63,7 +63,7 @@ namespace JersyHub.Areas.Admin.Controllers
             {
                 _uow.Category.Update(obj);
                 _uow.Save();
-                TempData["edit"] = "Category edited successfully. ";
+                TempData["success"] = "Category Updated Successfully. ";
                 return RedirectToAction("Index");
             }
             return View();

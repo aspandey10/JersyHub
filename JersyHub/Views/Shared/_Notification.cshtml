@@ -1,15 +1,18 @@
 ﻿@if (TempData["success"] != null)
-{
-            <p class="text-success">@TempData["success"]</p>
+{   
+    <script src="~/lib/jquery//dist/jquery.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+    <script type="text/javascript">
+        toastr.success('@TempData["success"]');
+    </script>
 
-}
+} 
 @if (TempData["delete"] != null)
 {
-            <p class="text-danger">@TempData["delete"]</p>
-
-}
-@if (TempData["edit"] != null)
-{
-            <p class="text-primary">@TempData["edit"]</p>
+    <script src="~/lib/jquery//dist/jquery.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+    <script type="text/javascript">
+        toastr.error('@TempData["delete"]');
+    </script>
 
 }

@@ -3,13 +3,10 @@
 
 <form method="post" enctype="multipart/form-data">
     <input asp-for="Product.Id" hidden />
-    <input asp-for="Product.ImageUrl" hidden>
+    <input asp-for="Product.ImageUrl" hidden />
     <input type="hidden" id="discountPriceInput" name="Product.DiscountedPrice" value="@Model.Product.DiscountedPrice" />
 
-
-
     <div class="border p-3 mt-4">
-
         <div class="row pb-2">
             <h2 class="text-primary">@(Model.Product.Id != 0 ? "Update" : "Create") Product</h2>
             <hr />
@@ -32,14 +29,11 @@
                     <span asp-validation-for="Product.ProductType" class="text-danger"></span>
                 </div>
 
-                
-
                 <!-- Category (League) -->
                 <div class="mb-3">
                     <label for="categoryField">Team</label>
                     <div id="categoryField"></div>
                     <input type="hidden" id="categoryInput" name="Product.CategoryId" value="@Model.Product.CategoryId" />
-                    
                     <span asp-validation-for="Product.CategoryId" class="text-danger"></span>
                 </div>
 
@@ -67,18 +61,12 @@
                     <span asp-validation-for="Product.Price" class="text-danger"></span>
                 </div>
 
+                <!-- Discount Rate -->
                 <div class="mb-3">
                     <label for="discountField">Discount Rate</label>
                     <div id="discountField"></div>
                     <input type="hidden" id="discountInput" name="Product.DiscountPercent" value="@Model.Product.DiscountPercent" />
                     <span asp-validation-for="Product.DiscountPercent" class="text-danger"></span>
-                </div>
-
-                <div class="mb-3">
-                    <label for="discountPriceField">Discounted Price</label>
-                    <div id="discountPriceField"></div>
-                    <input type="hidden" id="discountPriceInput" name="Product.DiscountedPrice" value="@Model.Product.DiscountedPrice" />
-                    <span asp-validation-for="Product.DiscountedPrice" class="text-danger"></span>
                 </div>
 
                 <!-- Image URL -->
@@ -134,8 +122,6 @@
                 }
             });
 
-            
-
             // Category (League)
             $("#categoryField").dxSelectBox({
                 value: '@Model.Product.CategoryId',
@@ -176,42 +162,35 @@
                 placeholder: 'Enter price',
                 onValueChanged: function (e) {
                     $("#priceInput").val(e.value);
+                    updateDiscountedPrice();
                 }
             });
+
+            // Discount Rate
             $("#discountField").dxNumberBox({
                 value: '@Model.Product.DiscountPercent',
                 min: 0,
                 showClearButton: true,
                 placeholder: 'Enter Discount Rate',
-                    onValueChanged: function (e) {
-                    var price = $("#priceField").dxNumberBox("instance").option("value");
-                    var discountPercent = e.value;
-
-                    // Calculate Discounted Price
-                    var discountedPrice = price - ((discountPercent / 100) * price);
-
-                    // Update the discounted price field
-                    $("#discountPriceField").dxNumberBox("instance").option("value", discountedPrice);
-
-                    // Also update the hidden input field for form submission
-                    $("#discountPriceInput").val(discountedPrice);
-
-                    $("#discountInput").val(e.value);
-                }
-            });
-            $("#discountPriceField").dxNumberBox({
-                value: '@Model.Product.Price - ((@Model.Product.DiscountPercent)/100)*@Model.Product.Price',
-                min: 0,
-                showClearButton: true,
-                placeholder: 'Discounted Price',
                 onValueChanged: function (e) {
-                    $("#discountPriceInput").val(e.value);
+                    $("#discountInput").val(e.value);
+                    updateDiscountedPrice();
                 }
             });
-            
+
+            function updateDiscountedPrice() {
+                var price = $("#priceField").dxNumberBox("instance").option("value");
+                var discountPercent = $("#discountField").dxNumberBox("instance").option("value");
+
+                if (price && discountPercent) {
+                    var discountedPrice = price - ((discountPercent / 100) * price);
+                    $("#discountPriceInput").val(discountedPrice); // Store the value in the hidden field
+                }
+            }
         });
     </script>
 }
+
 
 
 

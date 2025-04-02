@@ -14,7 +14,7 @@ namespace JersyHub.Domain.Entities
         public string Name { get; set; }
         [Required(ErrorMessage ="Please enter the Leage country")] 
         public string LeagueCountry { get; set; }
-        [Range(0, 100, ErrorMessage = "The range must be between 0-100")]
+        [Range(1, 100, ErrorMessage = "The range must be between 0-100")]
         public int DisplayOrder { get; set; } = 0;
         [ValidateNever]
         [JsonIgnore]
