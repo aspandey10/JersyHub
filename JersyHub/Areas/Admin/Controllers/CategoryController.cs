@@ -1,4 +1,5 @@
 ﻿using JersyHub.Application.Repository.IRepository;
+using JersyHub.Application.Services.ServiceInterface;
 using JersyHub.Data;
 using JersyHub.Domain.Entities;
 using Microsoft.AspNetCore.Authorization;
@@ -11,16 +12,18 @@ namespace JersyHub.Areas.Admin.Controllers
     public class CategoryController : Controller
     {
         public IUnitOfWork _uow;
+        private readonly ICategoryService _categoryservice;
 
-        public CategoryController(IUnitOfWork uow)
+        public CategoryController(IUnitOfWork uow, ICategoryService categoryservice)
         {
             _uow = uow;
+            _categoryservice = categoryservice;
         } 
 
 
         public IActionResult Index()
         {
-            var cat_data = _uow.Category.GetAll().ToList();
+            var cat_data = _categoryservice.GetAllCategories();
             return View(cat_data);
         }
 
@@ -34,8 +37,7 @@ namespace JersyHub.Areas.Admin.Controllers
         {
             if (ModelState.IsValid)
             {
-                _uow.Category.Add(obj);
-                _uow.Save();
+                _categoryservice.CreateCategory(obj);
                 TempData["success"] = "Category Created Successfully. ";
                 return RedirectToAction("Index");
             }
@@ -48,7 +50,7 @@ namespace JersyHub.Areas.Admin.Controllers
             {
                 return NotFound();
             }
-            var data = _uow.Category.Get(u => u.Id == id);
+            var data = _categoryservice.GetCategoryById(id.Value);
             if (data == null)
             {
                 return NotFound();
@@ -61,8 +63,7 @@ namespace JersyHub.Areas.Admin.Controllers
         {
             if (ModelState.IsValid)
             {
-                _uow.Category.Update(obj);
-                _uow.Save();
+                _categoryservice.UpdateCategory(obj);
                 TempData["success"] = "Category Updated Successfully. ";
                 return RedirectToAction("Index");
             }
@@ -76,7 +77,7 @@ namespace JersyHub.Areas.Admin.Controllers
             {
                 return NotFound();
             }
-            var data = _uow.Category.Get(u => u.Id == id);
+            var data = _categoryservice.GetCategoryById(id.Value);
             if (data == null)
             {
                 return NotFound();
@@ -91,8 +92,7 @@ namespace JersyHub.Areas.Admin.Controllers
             {
                 return NotFound();
             }
-            _uow.Category.Remove(obj);
-            _uow.Save();
+            _categoryservice.DeleteCategory(obj);
             TempData["delete"] = "Category deleted successfully. ";
             return RedirectToAction("Index");
 

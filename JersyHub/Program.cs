@@ -1,6 +1,8 @@
 using Hangfire;
 using JersyHub.Application.Repository.IRepository;
 using JersyHub.Application.Services;
+using JersyHub.Application.Services.ServiceImplementation;
+using JersyHub.Application.Services.ServiceInterface;
 using JersyHub.Data;
 using JersyHub.Infrastructure.Data;
 
@@ -35,6 +37,7 @@ builder.Services.AddSession(options =>
     );
 
 builder.Services.AddScoped<IUnitOfWork,UnitOfWork>();
+builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddScoped<IEmailSender, EmailSender>();
 builder.Services.AddScoped<IAppEmailSender, AppEmailSender>();
 builder.Services.AddScoped<EmailRemainderService>();
