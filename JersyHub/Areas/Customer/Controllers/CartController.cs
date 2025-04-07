@@ -1,7 +1,7 @@
 ﻿using JersyHub.Application.Repository.IRepository;
 using JersyHub.Data;
 using JersyHub.Domain.Entities;
-using JersyHub.Models.ViewModel;
+using JersyHub.Application.ViewModel;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;

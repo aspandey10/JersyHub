@@ -1,8 +1,10 @@
 ﻿using JersyHub.Application.Repository.IRepository;
+using JersyHub.Application.Services.ServiceInterface;
+using JersyHub.Application.ViewModel;
 using JersyHub.Data;
 using JersyHub.Domain.Entities;
 using JersyHub.Models;
-using JersyHub.Models.ViewModel;
+using JersyHub.Application.ViewModel;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Stripe;
@@ -14,69 +16,36 @@ namespace JersyHub.Areas.Admin.Controllers
     [Authorize]
     public class OrderController : Controller
     {
-        private readonly IUnitOfWork _uow;
         private readonly IAppEmailSender _emailsender;
+        private readonly IOrderHeaderService _orderheaderservice;
+
         [BindProperty]
         public OrderVM OrderVM { get; set; }
 
-        public OrderController(IUnitOfWork uow, IAppEmailSender emailsender)
+        public OrderController( IAppEmailSender emailsender, IOrderHeaderService orderheaderservice)
         {
-            _uow = uow;
             _emailsender = emailsender;
+            _orderheaderservice = orderheaderservice;
         }
-        public async Task<IActionResult> IndexAsync()
+        public IActionResult Index()
         {
-
-            if (User.IsInRole(StaticDetail.Role_Admin) || User.IsInRole(StaticDetail.Role_Employee))
-            {
-                List<OrderHeader> orderHeaders = _uow.OrderHeader.GetAll(includeProperties: "ApplicationUser").ToList();
-
-                List<OrderVM> orderVMs = orderHeaders.Select(order => new OrderVM
-                {
-                    OrderHeader = order,
-                    OrderDetail = _uow.OrderDetail.GetAll(u => u.OrderHeaderId == order.Id).ToList()
-                }).ToList();
-                return View(orderVMs);
-
-            }
-            else
-            {
-                var claimsIdentity = (ClaimsIdentity)User.Identity;
-                var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
-                List<OrderHeader> orderHeaders = _uow.OrderHeader.GetAll(u => u.ApplicationUserId == userId, includeProperties: "ApplicationUser").ToList();
-
-                List<OrderVM> orderVMs = orderHeaders.Select(order => new OrderVM
-                {
-                    OrderHeader = order,
-                    OrderDetail = _uow.OrderDetail.GetAll(u => u.OrderHeaderId == order.Id).ToList()
-                }).ToList();
-                return View(orderVMs);
-
-            }
+            var orders = _orderheaderservice.GetOrders(User);
+            return View(orders);
 
         }
-
-
-
-
-
-
 
         public IActionResult Details(int id)
         {
-            OrderVM = new()
-            {
-                OrderHeader = _uow.OrderHeader.Get(u => u.Id == id, includeProperties: "ApplicationUser"),
-                OrderDetail = _uow.OrderDetail.GetAll(u => u.OrderHeaderId == id, includeProperties: "Product")
-            };
-            return View(OrderVM);
+            var orderVM= _orderheaderservice.GetDetails(id);
+            return View(orderVM);
         }
 
         [HttpPost]
         [Authorize(Roles = StaticDetail.Role_Admin + "," + StaticDetail.Role_Employee)]
         public IActionResult UpdateOrderDetail()
         {
-            var orderHeaderFromDb = _uow.OrderHeader.Get(u => u.Id == OrderVM.OrderHeader.Id);
+            int orderId = OrderVM.OrderHeader.Id;
+            var orderHeaderFromDb = _orderheaderservice.GetOrderHeader(orderId);
             orderHeaderFromDb.Name = OrderVM.OrderHeader.Name;
             orderHeaderFromDb.PhoneNumber = OrderVM.OrderHeader.PhoneNumber;
             orderHeaderFromDb.StreetAddress = OrderVM.OrderHeader.StreetAddress;
@@ -92,16 +61,17 @@ namespace JersyHub.Areas.Admin.Controllers
             {
                 orderHeaderFromDb.TrackingNumber = OrderVM.OrderHeader.TrackingNumber;
             }
-            _uow.OrderHeader.Update(orderHeaderFromDb);
-            _uow.Save();
+            _orderheaderservice.UpdateOrderHeader(orderHeaderFromDb);
             return RedirectToAction(nameof(Details), new { id = orderHeaderFromDb.Id });
         }
         [HttpPost]
         [Authorize(Roles = StaticDetail.Role_Admin + "," + StaticDetail.Role_Employee)]
         public IActionResult StartProcessing()
         {
-            _uow.OrderHeader.UpdateStatus(OrderVM.OrderHeader.Id, StaticDetail.StatusInProcess);
-            _uow.Save();
+            int orderId = OrderVM.OrderHeader.Id;
+            var status = StaticDetail.StatusInProcess;
+
+            _orderheaderservice.UpdateStatus(orderId, status);
             return RedirectToAction(nameof(Details), new { Id = OrderVM.OrderHeader.Id });
         }
 
@@ -109,16 +79,16 @@ namespace JersyHub.Areas.Admin.Controllers
         [Authorize(Roles = StaticDetail.Role_Admin + "," + StaticDetail.Role_Employee)]
         public IActionResult ShipOrder()
         {
-            var orderHeader = _uow.OrderHeader.Get(u => u.Id == OrderVM.OrderHeader.Id);
+            int orderId= OrderVM.OrderHeader.Id;
+            var orderHeader = _orderheaderservice.GetOrderHeader(orderId);
             orderHeader.Carrier = OrderVM.OrderHeader.Carrier;
             orderHeader.TrackingNumber = OrderVM.OrderHeader.TrackingNumber;
             orderHeader.ShippingDate = DateTime.Now;
             orderHeader.OrderStatus = StaticDetail.StatusShipped;
-            _uow.OrderHeader.Update(orderHeader);
+            _orderheaderservice.UpdateOrderHeader(orderHeader);
 
 
-            _uow.OrderHeader.UpdateStatus(OrderVM.OrderHeader.Id, StaticDetail.StatusShipped);
-            _uow.Save();
+            _orderheaderservice.UpdateStatus(OrderVM.OrderHeader.Id, StaticDetail.StatusShipped);
             return RedirectToAction(nameof(Details), new { Id = OrderVM.OrderHeader.Id });
         }
 
@@ -126,7 +96,7 @@ namespace JersyHub.Areas.Admin.Controllers
         [Authorize(Roles = StaticDetail.Role_Admin + "," + StaticDetail.Role_Employee)]
         public IActionResult CancelOrder()
         {
-            var orderHeader = _uow.OrderHeader.Get(u => u.Id == OrderVM.OrderHeader.Id);
+            var orderHeader = _orderheaderservice.GetOrderHeader(OrderVM.OrderHeader.Id);
             if (orderHeader.PaymentStatus == StaticDetail.PaymentStatusApproved)
             {
                 var options = new RefundCreateOptions
@@ -138,15 +108,14 @@ namespace JersyHub.Areas.Admin.Controllers
                 var service = new RefundService();
                 Refund refund = service.Create(options);
 
-                _uow.OrderHeader.UpdateStatus(orderHeader.Id, StaticDetail.StatusCancelled, StaticDetail.StatusRefunded);
+                _orderheaderservice.UpdateStatus(orderHeader.Id, StaticDetail.StatusCancelled, StaticDetail.StatusRefunded);
 
             }
             else
             {
-                _uow.OrderHeader.UpdateStatus(orderHeader.Id, StaticDetail.StatusCancelled, StaticDetail.StatusCancelled);
+                _orderheaderservice.UpdateStatus(orderHeader.Id, StaticDetail.StatusCancelled, StaticDetail.StatusCancelled);
             }
 
-            _uow.Save();
             return RedirectToAction(nameof(Details), new { Id = OrderVM.OrderHeader.Id });
 
 

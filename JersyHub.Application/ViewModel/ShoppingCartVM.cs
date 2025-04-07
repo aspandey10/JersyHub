@@ -1,6 +1,7 @@
 ﻿  using JersyHub.Domain.Entities;
+using JersyHub.Models;
 
-namespace JersyHub.Models.ViewModel
+namespace JersyHub.Application.ViewModel
 {
     public class ShoppingCartVM
     {

@@ -1,9 +1,10 @@
 ﻿using JersyHub.Application.Repository.IRepository;
+using JersyHub.Application.Services.ServiceInterface;
+using JersyHub.Application.ViewModel;
 using JersyHub.Data;
 using JersyHub.Data;
 using JersyHub.Domain.Entities;
 using JersyHub.Models;
-using JersyHub.Models.ViewModel;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -12,25 +13,30 @@ using Microsoft.Extensions.Logging.Abstractions;
 namespace JersyHub.Areas.Admin.Controllers
 {
     [Area("Admin")]
-    [Authorize(Roles = StaticDetail.Role_Admin)]
+    [Authorize(Roles = "Admin")]
 
     public class ProductController : Controller
     {
         public IUnitOfWork _uow;
         private readonly IWebHostEnvironment _webHostEnvironment;
         private readonly IAppEmailSender _emailSender;
+        private readonly IProductsService _productservice;
+        private readonly ICategoryService _categoryservice;
+        private readonly IShoppingCartService _shoppingcartservice;
 
-        public ProductController(IUnitOfWork uow, IWebHostEnvironment webHostEnvironment,IAppEmailSender emailSender)
+        public ProductController( IWebHostEnvironment webHostEnvironment,IAppEmailSender emailSender, IProductsService productservice, ICategoryService categoryservice, IShoppingCartService shoppingcartservice)
         {
-            _uow = uow;
             _webHostEnvironment = webHostEnvironment;
             _emailSender = emailSender;
+            _productservice = productservice;
+            _categoryservice = categoryservice;
+            _shoppingcartservice = shoppingcartservice;
         }
 
 
         public IActionResult Index()
         {
-            var cat_data = _uow.Product.GetAll(includeProperties:"Category").ToList();
+            var cat_data = _productservice.GetAllProducts();
             
             return View(cat_data);
 
@@ -38,7 +44,7 @@ namespace JersyHub.Areas.Admin.Controllers
 
         public IActionResult Upsert(int? id)
         {
-            IEnumerable<SelectListItem> CategoryList = _uow.Category.GetAll().Select(u => new SelectListItem
+            IEnumerable<SelectListItem> CategoryList = _categoryservice.GetAllCategories().Select(u => new SelectListItem
             {
                 Text = u.Name,
                 Value = u.Id.ToString()
@@ -55,7 +61,7 @@ namespace JersyHub.Areas.Admin.Controllers
             }
             else
             {
-                productVM.Product= _uow.Product.Get(u=>u.Id==id);
+                productVM.Product= _productservice.GetProductById((int)id);
                 return View(productVM);
             }
 
@@ -79,18 +85,12 @@ namespace JersyHub.Areas.Admin.Controllers
                 }
                 if (obj.Product.DiscountPercent > 0)
                 {
-                    List<ShoppingCart> shoppingCarts = _uow.ShoppingCart.GetAll().ToList();
+                    var shoppingCarts = _shoppingcartservice.GetAllCarts();
                     foreach (var cart in shoppingCarts)
                     {
                         if (cart.ProductId == obj.Product.Id)
                         {
-                            var user = _uow.ApplicationUser.Get(u => u.Id == cart.ApplicationUserId);
-                            var email = user.Email;
-                            var subject = "Discount Alert";
-                            var body = "Hey!There is a discount in the product that is in your cart.check it out";
-
-                            await _emailSender.SendEmailAsync(email, subject, body);
-
+                            _productservice.SendEmailToUserAsync(User);
                             cart.LastEmail = DateTime.Now;
                             _uow.ShoppingCart.Update(cart);
                             _uow.Save();
@@ -100,17 +100,17 @@ namespace JersyHub.Areas.Admin.Controllers
 
                 if (obj.Product.Id == 0)
                 {
-                    _uow.Product.Add(obj.Product);
+                    _productservice.AddProduct(obj.Product);
                     TempData["success"] = "Product Created Successfully. ";
 
                 }
                 else
                 {
-                    _uow.Product.Update(obj.Product);
+                    _productservice.UpdateProduct(obj.Product);
                     TempData["success"] = "Product updated Successfully. ";
 
                 }
-                _uow.Save();
+                
                 return RedirectToAction("Index");
             }
             return View();
@@ -124,7 +124,7 @@ namespace JersyHub.Areas.Admin.Controllers
             {
                 return NotFound();
             }
-            var data = _uow.Product.Get(u => u.Id == id);
+            var data = _productservice.GetProductById((int)id);
             if (data == null)
             {
                 return NotFound();
@@ -139,8 +139,7 @@ namespace JersyHub.Areas.Admin.Controllers
             {
                 return NotFound();
             }
-            _uow.Product.Remove(obj);
-            _uow.Save();
+            _productservice.DeleteProduct(obj);
             TempData["delete"] = "Product deleted successfully. ";
             return RedirectToAction("Index");
 

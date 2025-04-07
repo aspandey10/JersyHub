@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace JersyHub.Areas.Admin.Controllers
 {
     [Area("Admin")]
-    [Authorize(Roles =StaticDetail.Role_Admin)]
+    [Authorize(Roles ="Admin")]
     public class CategoryController : Controller
     {
         public IUnitOfWork _uow;

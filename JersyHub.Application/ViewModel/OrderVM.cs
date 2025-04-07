@@ -1,6 +1,6 @@
 ﻿ using JersyHub.Domain.Entities;
 
-namespace JersyHub.Models.ViewModel
+namespace JersyHub.Application.ViewModel
 {
     public class OrderVM
     {

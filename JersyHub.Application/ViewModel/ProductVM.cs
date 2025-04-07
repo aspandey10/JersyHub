@@ -1,7 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+﻿using JersyHub.Models;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
-namespace JersyHub.Models.ViewModel
+namespace JersyHub.Application.ViewModel
 {
     public class ProductVM
     {
