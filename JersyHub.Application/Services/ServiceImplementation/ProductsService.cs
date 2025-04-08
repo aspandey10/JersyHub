@@ -42,9 +42,15 @@ namespace JersyHub.Application.Services.ServiceImplementation
             return data;
         }
 
+        public IEnumerable<Product> GetAllSimilar(List<int> categoryIds, List<int> excludeProductIds)
+        {
+            var data = uow.Product.GetAll(p => categoryIds.Contains(p.CategoryId) && !excludeProductIds.Contains(p.Id),includeProperties: "Category").ToList();
+            return data;
+        }
+
         public Product GetProductById(int id)
         {
-            var data = uow.Product.Get(u => u.Id == id);
+            var data = uow.Product.Get(u => u.Id == id, includeProperties: "Category");
             return data;
         }
 

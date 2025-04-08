@@ -17,5 +17,7 @@ namespace JersyHub.Application.Services.ServiceInterface
         Product GetProductById(int id);
 
         Task SendEmailToUserAsync(ClaimsPrincipal User);
+
+        IEnumerable<Product> GetAllSimilar(List<int> catid, List<int> excludeProductId);
     }
 }

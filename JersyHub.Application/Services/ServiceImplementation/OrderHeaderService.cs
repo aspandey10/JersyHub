@@ -63,7 +63,7 @@ namespace JersyHub.Application.Services.ServiceImplementation
 
         public OrderHeader GetOrderHeader(int id)
         {
-            var data=uow.OrderHeader.Get(u => u.Id == id);
+            var data=uow.OrderHeader.Get(u => u.Id == id,includeProperties:"ApplicationUser");
             return data;
         }
 
@@ -76,6 +76,18 @@ namespace JersyHub.Application.Services.ServiceImplementation
         public void UpdateStatus(int id, string status, string? paymentStatus = null)
         {
             uow.OrderHeader.UpdateStatus(id, status,paymentStatus);
+            uow.Save();
+        }
+
+        public void AddOrderHeader(OrderHeader orderHeader)
+        {
+            uow.OrderHeader.Add(orderHeader);
+            uow.Save();
+        }
+
+        public void UpdateStripePaymentId(int id, string sessionId, string paymentIntentId)
+        {
+            uow.OrderHeader.UpdateStripePaymentId(id, sessionId, paymentIntentId);
             uow.Save();
         }
     }

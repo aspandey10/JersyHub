@@ -5,12 +5,14 @@ using JersyHub.Application.Services.ServiceImplementation;
 using JersyHub.Application.Services.ServiceInterface;
 using JersyHub.Data;
 using JersyHub.Infrastructure.Data;
+using JersyHub.Domain.Entities;
 
 using JersyHub.Infrastructure.Repo;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
 using Stripe;
+using JersyHub.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -42,6 +44,7 @@ builder.Services.AddScoped<IProductsService, ProductsService>();
 builder.Services.AddScoped<IShoppingCartService, ShoppingCartService>();
 builder.Services.AddScoped<IEmailSender, EmailSender>();
 builder.Services.AddScoped<IOrderHeaderService, OrderHeaderService>();
+builder.Services.AddScoped<IOrderDetailService, OrderDetailService>();
 builder.Services.AddScoped<IAppEmailSender, AppEmailSender>();
 builder.Services.AddScoped<EmailRemainderService>();
 var app = builder.Build();

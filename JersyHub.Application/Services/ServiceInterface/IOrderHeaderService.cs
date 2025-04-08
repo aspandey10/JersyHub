@@ -18,5 +18,7 @@ namespace JersyHub.Application.Services.ServiceInterface
         OrderHeader GetOrderHeader(int id);
         void UpdateOrderHeader(OrderHeader orderHeader);
         void UpdateStatus(int id, string  status, string? paymentStatus = null);
+        void UpdateStripePaymentId(int id, string sessionId, string paymentIntentId);
+        void AddOrderHeader(OrderHeader orderHeader);
     }
 }

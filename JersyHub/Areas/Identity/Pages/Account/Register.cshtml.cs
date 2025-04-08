@@ -23,6 +23,7 @@ using JersyHub.Data;
 using System.Reflection.Metadata.Ecma335;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+using JersyHub.Domain.Entities;
 
 namespace JersyHub.Areas.Identity.Pages.Account
 {

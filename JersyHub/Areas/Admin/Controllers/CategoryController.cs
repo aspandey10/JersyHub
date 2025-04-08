@@ -11,12 +11,12 @@ namespace JersyHub.Areas.Admin.Controllers
     [Authorize(Roles ="Admin")]
     public class CategoryController : Controller
     {
-        public IUnitOfWork _uow;
+        
         private readonly ICategoryService _categoryservice;
 
-        public CategoryController(IUnitOfWork uow, ICategoryService categoryservice)
+        public CategoryController( ICategoryService categoryservice)
         {
-            _uow = uow;
+            
             _categoryservice = categoryservice;
         } 
 
