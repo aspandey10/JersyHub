@@ -29,6 +29,12 @@ builder.Services.AddDbContext<ApplicationDbContext>(options=>
 builder.Services.Configure<StripeSettings>(builder.Configuration.GetSection("Stripe"));  
 
 builder.Services.AddIdentity<IdentityUser,IdentityRole>().AddEntityFrameworkStores<ApplicationDbContext>().AddDefaultTokenProviders();
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    options.LoginPath = "/Identity/Account/Login";
+    options.AccessDeniedPath = "/Identity/Account/AccessDenied";
+});
+
 builder.Services.AddRazorPages();
 builder.Services.AddSession(options =>
 {
@@ -37,6 +43,8 @@ builder.Services.AddSession(options =>
     options.Cookie.IsEssential = true;
 }
     );
+
+builder.Services.AddAuthorization();
 
 builder.Services.AddScoped<IUnitOfWork,UnitOfWork>();
 builder.Services.AddScoped<ICategoryService, CategoryService>();

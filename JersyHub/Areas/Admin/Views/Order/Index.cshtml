@@ -29,7 +29,7 @@
             paging: { pageSize: 10 },
             headerFilter: { visible: true },
             searchPanel: { visible: true, width: 240, placeholder: "Search..." },
-            export:{enabled:true},
+            export:{enabled:false},
 
             columns: [
                 { dataField: "orderHeader.id", caption: "ID" },
@@ -44,6 +44,7 @@
                     width: 200,
                     alignment: "center",
                     export: { visible: false },
+                    allowExporting:false,
                     cellTemplate: function (container, options) {
                         var id = options.data.orderHeader.id;
 

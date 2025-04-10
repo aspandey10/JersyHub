@@ -124,8 +124,8 @@
 
 
 
-
-@*  @model Product
+@* @using JersyHub.Domain.Entities
+@model Product
 
 <form method="post">
     <div class="border p-3 mt-4">
@@ -141,10 +141,7 @@
             <label asp-for="ProductType">ProductType</label>
             <input asp-for="ProductType" class="form-control" />
         </div>
-        <div class="mb-3">
-            <label asp-for="Team">Team</label>
-            <input asp-for="Team" class="form-control" />
-        </div>
+        
        
         <div class="mb-3">
             <label asp-for="Edition">Edition</label>

@@ -99,7 +99,7 @@ namespace JersyHub.Areas.Customer.Controllers
             else
             {
                 cartDb.Count += shoppingCart.Count;
-                _shoppingcartservice.UpdateCart(shoppingCart);
+                _shoppingcartservice.UpdateCart(cartDb);
 
             }
             return RedirectToAction(nameof(Index));

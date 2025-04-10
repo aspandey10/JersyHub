@@ -92,8 +92,7 @@ namespace JersyHub.Areas.Admin.Controllers
                         {
                             _productservice.SendEmailToUserAsync(User);
                             cart.LastEmail = DateTime.Now;
-                            _uow.ShoppingCart.Update(cart);
-                            _uow.Save();
+                            _shoppingcartservice.UpdateCart(cart);
                         }
                     }
                 }
