@@ -1,37 +1,39 @@
-﻿@using JersyHub.Domain.Entities
-@model Category
+﻿@using JersyHub.Application.ViewModel
+@using JersyHub.Domain.Entities
+@model InventoryVM
 
 @{
-    var countries = ViewBag.Countries as string[];
+    var countries = ViewBag.Products as string[];
 }
 
 <form method="post" asp-action="Create">
     <div class="border p-3 mt-4">
         <div class="row pb-2">
-            <h2 class="text-primary">Create Category</h2>
+            <h2 class="text-primary">Inventory Data</h2>
             <hr />
         </div>
 
         <div class="mb-3">
-            <label for="nameField">Category Name</label>
+            <label for="nameField">Product Name</label>
             <div id="nameField"></div>
-            <input type="hidden" id="nameInput" name="Name" />
+            <input type="hidden" id="nameInput" name="Inventory.ProductId" />
         </div>
 
         <div class="mb-3">
-            <label for="leagueCountryField">League Country</label>
-            <div id="leagueCountryField"></div>
-            <input type="hidden" id="leagueCountryInput" name="LeagueCountry" />
+            <label for="stockField">Stock Quantity</label>
+            <div id="stockField"></div>
+            <input type="hidden" id="stockInput" name="Inventory.QuantityInStock" />
         </div>
 
+        
         <div class="mb-3">
-            <label for="displayOrderField">Display Order</label>
-            <div id="displayOrderField"></div>
-            <input type="hidden" id="displayOrderInput" name="DisplayOrder" />
+            <label for="distributerField">Distributer Name</label>
+            <div id="distributerField"></div>
+            <input type="hidden" id="distributerInput" name="Inventory.Distributer" />
         </div>
 
         <button type="submit" class="btn btn-primary">Create</button>
-        <a asp-controller="Category" asp-action="Index" class="btn btn-outline-secondary">Back To List</a>
+        <a asp-controller="Inventory" asp-action="Index" class="btn btn-outline-secondary">Back To Inventory</a>
     </div>
 </form>
 
@@ -39,42 +41,48 @@
     @await Html.PartialAsync("_ValidationScriptsPartial")
 
     <script>
-        var countries = @Html.Raw(Json.Serialize(ViewBag.Countries));
 
+        var products = @Html.Raw(Json.Serialize(ViewBag.Products));
         $(function () {
-            $("#nameField").dxTextBox({
-                placeholder: 'Enter category name',
-                showClearButton: true,
-                onValueChanged: e => $("#nameInput").val(e.value)
+            $("#nameField").dxSelectBox({
+                items: @Html.Raw(Json.Serialize(Model.ProductList)),
+                displayExpr: "text",
+                valueExpr: "value",
+                placeholder: '--Select Product--',
+                onValueChanged: function (e) {
+                    $("#nameInput").val(e.value);
+                }
             }).dxValidator({
                 validationRules: [
-                    { type: "required", message: "Category name is required" }
+                    { type: "required", message: "Please Enter the Product" }
                 ]
             });
 
-            $("#leagueCountryField").dxSelectBox({
-                dataSource: countries,
-                searchEnabled: true,
-                placeholder: 'Select a country',
-                showClearButton: true,
-                onValueChanged: e => $("#leagueCountryInput").val(e.value)
-            }).dxValidator({
-                validationRules: [
-                    { type: "required", message: "League country is required" }
-                ]
-            });
 
-            $("#displayOrderField").dxNumberBox({
-                placeholder: 'Enter display order',
+
+             $("#stockField").dxNumberBox({
+                placeholder: 'Enter total stock',
                 showSpinButtons: true,
                 min: 1,
-                onValueChanged: e => $("#displayOrderInput").val(e.value)
+                onValueChanged: e => $("#stockInput").val(e.value)
             }).dxValidator({
                 validationRules: [
-                    { type: "required", message: "Display order is required" },
+                    { type: "required", message: "Stock is required" },
                     { type: "range", min: 1, max: 100, message: "Must be between 1 and 100" }
                 ]
             });
+
+             $("#distributerField").dxTextBox({
+                placeholder: 'Enter distributer name',
+                showClearButton: true,
+                onValueChanged: e => $("#distributerInput").val(e.value)
+            }).dxValidator({
+                validationRules: [
+                    { type: "required", message: "Distributer name is required" }
+                ]
+            });
+
+           
 
             $('form').on('submit', function (e) {
                 if (!DevExpress.validationEngine.validateGroup().isValid) {

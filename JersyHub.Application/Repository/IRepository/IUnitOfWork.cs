@@ -9,6 +9,8 @@
         IOrderDeatilRepository OrderDetail { get; }
         IOrderHeaderRepository OrderHeader { get; }
 
+        IInventoryRepository Inventory { get; }
+
         void Save();
     }
 }

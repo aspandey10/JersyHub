@@ -1,0 +1,59 @@
+﻿@using JersyHub.Application.ViewModel
+@using JersyHub.Domain.Entities
+@model Inventory
+
+<form method="post">
+    <div class="border p-3 mt-4">
+        <div class="row pb-2">
+            <h2 class="text-primary">Delete Inventory</h2>
+            <hr />
+        </div>
+
+        <div class="mb-3">
+            <label for="nameField">Product</label>
+            <div id="nameField"></div>
+        </div>
+
+        <div class="mb-3">
+            <label for="stockField">Stock Quantity</label>
+            <div id="stockField"></div>
+        </div>
+
+        <div class="mb-3">
+            <label for="distributerField">Distributer Name</label>
+            <div id="distributerField"></div>
+        </div>
+
+        <button type="submit" class="btn btn-danger">Delete</button>
+        <a asp-controller="Inventory" asp-action="Index" class="btn btn-outline-secondary">Back To Inventory</a>
+    </div>
+</form>
+
+@section Scripts {
+    @await Html.PartialAsync("_ValidationScriptsPartial")
+
+    <script>
+        $(function () {
+            // Display Product name in a read-only textbox
+            $("#nameField").dxTextBox({
+                value: '@Model.Product.ProductName', // Assuming Product has a Name property
+                readOnly: true,
+                showClearButton: false
+            });
+
+            // Display Stock Quantity in a read-only NumberBox
+            $("#stockField").dxNumberBox({
+                value: '@Model.QuantityInStock',
+                readOnly: true,
+                showSpinButtons: false
+            });
+
+            // Display Distributer name in a read-only textbox
+            $("#distributerField").dxTextBox({
+                value: '@Model.Distributer',
+                readOnly: true,
+                showClearButton: false
+            });
+        });
+    </script>
+}

@@ -52,6 +52,7 @@ builder.Services.AddScoped<IProductsService, ProductsService>();
 builder.Services.AddScoped<IShoppingCartService, ShoppingCartService>();
 builder.Services.AddScoped<IEmailSender, EmailSender>();
 builder.Services.AddScoped<IOrderHeaderService, OrderHeaderService>();
+builder.Services.AddScoped<IInventoryService, InventoryService>();
 builder.Services.AddScoped<IOrderDetailService, OrderDetailService>();
 builder.Services.AddScoped<IAppEmailSender, AppEmailSender>();
 builder.Services.AddScoped<EmailRemainderService>();

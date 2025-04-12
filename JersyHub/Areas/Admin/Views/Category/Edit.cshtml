@@ -45,6 +45,10 @@
                 onValueChanged: function (e) {
                     $("#nameInput").val(e.value); 
                 }
+            }).dxValidator({
+                validationRules: [
+                    { type: "required", message: "Category name is required" }
+                ]
             });
 
             $("#leagueCountryField").dxTextBox({
@@ -53,6 +57,10 @@
                 onValueChanged: function (e) {
                     $("#leagueCountryInput").val(e.value); 
                 }
+            }).dxValidator({
+                validationRules: [
+                    { type: "required", message: "League country is required" }
+                ]
             });
 
             $("#displayOrderField").dxNumberBox({
@@ -62,6 +70,16 @@
                 max: 100,
                 onValueChanged: function (e) {
                     $("#displayOrderInput").val(e.value); 
+                }
+            }).dxValidator({
+                validationRules: [
+                    { type: "required", message: "Display order is required" },
+                    { type: "range", min: 1, max: 100, message: "Must be between 1 and 100" }
+                ]
+            });
+            $('form').on('submit', function (e) {
+                if (!DevExpress.validationEngine.validateGroup().isValid) {
+                    e.preventDefault();
                 }
             });
         });

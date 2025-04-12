@@ -1,0 +1,95 @@
+﻿@using JersyHub.Application.ViewModel
+@using JersyHub.Domain.Entities
+@model InventoryVM
+
+<form method="post">
+    <div class="border p-3 mt-4">
+        <div class="row pb-2">
+            <h2 class="text-primary">Edit Inventory</h2>
+            <hr />
+        </div>
+
+        <input type="hidden" asp-for="Inventory.Id" />
+
+        <div class="mb-3">
+            <label for="nameField">Product Name</label>
+            <div id="nameField"></div>
+            <input type="hidden" id="nameInput" name="Inventory.ProductId" value="@Model.Inventory.ProductId" />
+        </div>
+
+        <div class="mb-3">
+            <label for="stockField">Stock Quantity</label>
+            <div id="stockField"></div>
+            <input type="hidden" id="stockInput" name="Inventory.QuantityInStock" value="@Model.Inventory.QuantityInStock" />
+        </div>
+
+        <div class="mb-3">
+            <label for="distributerField">Distributer Name</label>
+            <div id="distributerField"></div>
+            <input type="hidden" id="distributerInput" name="Inventory.Distributer" value="@Model.Inventory.Distributer" />
+        </div>
+
+        <button type="submit" class="btn btn-primary">Save Changes</button>
+        <a asp-controller="Inventory" asp-action="Index" class="btn btn-outline-secondary">Back To Inventory</a>
+    </div>
+</form>
+
+@section Scripts {
+    @await Html.PartialAsync("_ValidationScriptsPartial")
+
+    <script>
+        $(function () {
+            // Product select box
+            $("#nameField").dxSelectBox({
+                items: @Html.Raw(Json.Serialize(Model.ProductList)),
+                value: '@Model.Inventory.ProductId',
+                displayExpr: "text",
+                valueExpr: "value",
+                placeholder: '--Select Product--',
+                onValueChanged: function (e) {
+                    $("#nameInput").val(e.value);
+                }
+            }).dxValidator({
+                validationRules: [
+                    { type: "required", message: "Please select a product." }
+                ]
+            });
+
+            // Quantity in stock
+            $("#stockField").dxNumberBox({
+                value: '@Model.Inventory.QuantityInStock',
+                showSpinButtons: true,
+                min: 1,
+                max: 100,
+                onValueChanged: function (e) {
+                    $("#stockInput").val(e.value);
+                }
+            }).dxValidator({
+                validationRules: [
+                    { type: "required", message: "Stock quantity is required." },
+                    { type: "range", min: 1, max: 100, message: "Must be between 1 and 100." }
+                ]
+            });
+
+            // Distributer
+            $("#distributerField").dxTextBox({
+                value: '@Model.Inventory.Distributer',
+                showClearButton: true,
+                onValueChanged: function (e) {
+                    $("#distributerInput").val(e.value);
+                }
+            }).dxValidator({
+                validationRules: [
+                    { type: "required", message: "Distributer name is required." }
+                ]
+            });
+
+            // Validation check before submit
+            $('form').on('submit', function (e) {
+                if (!DevExpress.validationEngine.validateGroup().isValid) {
+                    e.preventDefault();
+                }
+            });
+        });
+    </script>
+}

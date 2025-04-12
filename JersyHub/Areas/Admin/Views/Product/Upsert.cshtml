@@ -18,7 +18,6 @@
                     <label for="productNameField">Product Name</label>
                     <div id="productNameField"></div>
                     <input type="hidden" id="productNameInput" name="Product.ProductName" value="@Model.Product.ProductName" />
-                    <span asp-validation-for="Product.ProductName" class="text-danger"></span>
                 </div>
 
                 <!-- Product Type -->
@@ -26,7 +25,6 @@
                     <label for="productTypeField">Product Type</label>
                     <div id="productTypeField"></div>
                     <input type="hidden" id="productTypeInput" name="Product.ProductType" value="@Model.Product.ProductType" />
-                    <span asp-validation-for="Product.ProductType" class="text-danger"></span>
                 </div>
 
                 <!-- Category (League) -->
@@ -34,7 +32,6 @@
                     <label for="categoryField">Team</label>
                     <div id="categoryField"></div>
                     <input type="hidden" id="categoryInput" name="Product.CategoryId" value="@Model.Product.CategoryId" />
-                    <span asp-validation-for="Product.CategoryId" class="text-danger"></span>
                 </div>
 
                 <!-- Edition -->
@@ -42,7 +39,6 @@
                     <label for="editionField">Edition</label>
                     <div id="editionField"></div>
                     <input type="hidden" id="editionInput" name="Product.Edition" value="@Model.Product.Edition" />
-                    <span asp-validation-for="Product.Edition" class="text-danger"></span>
                 </div>
 
                 <!-- Year -->
@@ -50,7 +46,6 @@
                     <label for="yearField">Year</label>
                     <div id="yearField"></div>
                     <input type="hidden" id="yearInput" name="Product.Year" value="@Model.Product.Year" />
-                    <span asp-validation-for="Product.Year" class="text-danger"></span>
                 </div>
 
                 <!-- Price -->
@@ -58,7 +53,6 @@
                     <label for="priceField">Price</label>
                     <div id="priceField"></div>
                     <input type="hidden" id="priceInput" name="Product.Price" value="@Model.Product.Price" />
-                    <span asp-validation-for="Product.Price" class="text-danger"></span>
                 </div>
 
                 <!-- Discount Rate -->
@@ -110,6 +104,10 @@
                 onValueChanged: function (e) {
                     $("#productNameInput").val(e.value);
                 }
+            }).dxValidator({
+                validationRules: [
+                    { type: "required", message: "Product name is required" }
+                ]
             });
 
             // Product Type
@@ -120,6 +118,10 @@
                 onValueChanged: function (e) {
                     $("#productTypeInput").val(e.value);
                 }
+            }).dxValidator({
+                validationRules: [
+                    { type: "required", message: "Product Type is required" }
+                ]
             });
 
             // Category (League)
@@ -132,6 +134,10 @@
                 onValueChanged: function (e) {
                     $("#categoryInput").val(e.value);
                 }
+            }).dxValidator({
+                validationRules: [
+                    { type: "required", message: "Please Enter the Category" }
+                ]
             });
 
             // Edition
@@ -142,6 +148,10 @@
                 onValueChanged: function (e) {
                     $("#editionInput").val(e.value);
                 }
+            }).dxValidator({
+                validationRules: [
+                    { type: "required", message: "Edition is required" }
+                ]
             });
 
             // Year
@@ -152,6 +162,10 @@
                 onValueChanged: function (e) {
                     $("#yearInput").val(e.value);
                 }
+            }).dxValidator({
+                validationRules: [
+                    { type: "required", message: "Product Year is required" }
+                ]
             });
 
             // Price
@@ -164,6 +178,10 @@
                     $("#priceInput").val(e.value);
                     updateDiscountedPrice();
                 }
+            }).dxValidator({
+                validationRules: [
+                    { type: "required", message: "Product Price is required" }
+                ]
             });
 
             // Discount Rate
@@ -188,6 +206,12 @@
                 }
             }
         });
+        $('form').on('submit', function (e) {
+                if (!DevExpress.validationEngine.validateGroup().isValid) {
+                    e.preventDefault();
+                }
+            });
+            
     </script>
 }
 
