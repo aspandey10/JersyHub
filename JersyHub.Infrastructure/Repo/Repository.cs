@@ -32,9 +32,6 @@ namespace JersyHub.Infrastructure.Repo
                 }
             }
             return query.FirstOrDefault();
-
-            //var data= dbset.Where(filter);
-            //return data.FirstOrDefault();
         }
 
         public IEnumerable<T> GetAll(Expression<Func<T, bool>>? filter,string? includeProperties = null)

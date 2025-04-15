@@ -1,10 +1,11 @@
 ﻿using JersyHub.Application.Repository.IRepository;
+using JersyHub.Application.Services.ServiceImplementation;
 using JersyHub.Application.Services.ServiceInterface;
+using JersyHub.Application.ViewModel;
 using JersyHub.Application.ViewModel;
 using JersyHub.Data;
 using JersyHub.Domain.Entities;
 using JersyHub.Models;
-using JersyHub.Application.ViewModel;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Stripe;
@@ -18,14 +19,18 @@ namespace JersyHub.Areas.Admin.Controllers
     {
         private readonly IAppEmailSender _emailsender;
         private readonly IOrderHeaderService _orderheaderservice;
+        private readonly IShoppingCartService _shoppingcartservice;
+        private readonly IInventoryService _inventoryservice;
 
         [BindProperty]
         public OrderVM OrderVM { get; set; }
 
-        public OrderController( IAppEmailSender emailsender, IOrderHeaderService orderheaderservice)
+        public OrderController( IAppEmailSender emailsender, IOrderHeaderService orderheaderservice, IShoppingCartService shoppingcartservice, IInventoryService inventoryservice)
         {
             _emailsender = emailsender;
             _orderheaderservice = orderheaderservice;
+            _shoppingcartservice = shoppingcartservice;
+            _inventoryservice = inventoryservice;
         }
         public IActionResult Index()
         {

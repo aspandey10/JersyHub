@@ -40,6 +40,13 @@ namespace JersyHub.Application.Services.ServiceImplementation
             var data = uow.Inventory.Get(u => u.Id == id, includeProperties: "Product");
             return data;
         }
+
+        public Inventory GetInventoryByProductId(int productId)
+        {
+            var data = uow.Inventory.Get(u => u.ProductId == productId, includeProperties: "Product");
+            return data;
+        }
+
         public void UpdateInventory(Inventory inventory)
         {
             uow.Inventory.Update(inventory);

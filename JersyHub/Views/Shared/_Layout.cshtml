@@ -32,14 +32,14 @@
                             <a class="nav-link text-light @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Home" && ViewContext.RouteData.Values["Area"]?.ToString() == "Customer" ? "active" : "")" asp-area="Customer" asp-controller="Home" asp-action="Index" asp-route-active="Home">Home</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-light @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Order" && ViewContext.RouteData.Values["Area"]?.ToString() == "Admin" ? "active" : "")" asp-area="Admin" asp-controller="Order" asp-action="Index" asp-route-active="Order">Order Management</a>
+                            <a class="nav-link text-light @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Order" && ViewContext.RouteData.Values["Area"]?.ToString() == "Admin" ? "active" : "")" asp-area="Admin" asp-controller="Order" asp-action="Index" asp-route-active="Order">Orders</a>
                         </li>
                         @if (User.IsInRole(StaticDetail.Role_Admin))
                         {
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle text-light
                     @((ViewContext.RouteData.Values["Controller"]?.ToString() == "Category" || ViewContext.RouteData.Values["Controller"]?.ToString() == "Product") ? "active" : "")" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                    Management
+                                    Admin
                                 </a>
                                 <ul class="dropdown-menu">
                                     <li class="nav-item">

@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Stripe;
 using Stripe.Checkout;
+using Stripe.Issuing;
 using System.Security.Claims;
 
 namespace JersyHub.Areas.Customer.Controllers
@@ -24,12 +25,12 @@ namespace JersyHub.Areas.Customer.Controllers
         private readonly IShoppingCartService _shoppingcartservice;
         private readonly IOrderHeaderService _orderheaderservice;
         private readonly IOrderDetailService _orderdetailservice;
-        
+        private readonly IInventoryService _inventoryservice;
 
         [BindProperty] 
         public ShoppingCartVM shoppingCartVM { get; set; }
 
-        public CartController(IAppEmailSender emailsender, IProductsService productservice, IShoppingCartService shoppingcartservice,IOrderHeaderService orderheaderservice, IOrderDetailService orderdetailservice)
+        public CartController(IAppEmailSender emailsender, IProductsService productservice, IShoppingCartService shoppingcartservice,IOrderHeaderService orderheaderservice, IOrderDetailService orderdetailservice, IInventoryService inventoryservice)
         {
 
             _emailsender = emailsender;
@@ -37,7 +38,7 @@ namespace JersyHub.Areas.Customer.Controllers
             _shoppingcartservice = shoppingcartservice;
             _orderheaderservice = orderheaderservice;
             _orderdetailservice = orderdetailservice;
-            
+            _inventoryservice = inventoryservice;
         }
 
 
@@ -141,7 +142,16 @@ namespace JersyHub.Areas.Customer.Controllers
             }
 
             List<ShoppingCart> shoppingCarts = _shoppingcartservice.GetCartsForUser(orderHeader.ApplicationUserId).ToList();
+            foreach (var cart in shoppingCarts)
+            {
+                var invdata = _inventoryservice.GetInventoryByProductId(cart.ProductId);
+                var count = cart.Count;
+                invdata.QuantitySold += count;
+                invdata.QuantityInStock -= count;
+                _inventoryservice.UpdateInventory(invdata);
+            }
             _shoppingcartservice.ClearCart(shoppingCarts);
+            
 
             // Send Order Confirmation Email
             string customerEmail = orderHeader.ApplicationUser.Email;

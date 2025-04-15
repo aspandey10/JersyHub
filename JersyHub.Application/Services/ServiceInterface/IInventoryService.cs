@@ -15,5 +15,6 @@ namespace JersyHub.Application.Services.ServiceInterface
         void CreateInventory(Inventory inventory);
         void UpdateInventory( Inventory inventory);
         void DeleteInventory(Inventory inventory);
+        public Inventory GetInventoryByProductId(int productId);
     }
 }

@@ -1,11 +1,9 @@
 ﻿@using JersyHub.Application.ViewModel;
 @model ProductVM
-
 <form method="post" enctype="multipart/form-data">
     <input asp-for="Product.Id" hidden />
     <input asp-for="Product.ImageUrl" hidden />
     <input type="hidden" id="discountPriceInput" name="Product.DiscountedPrice" value="@Model.Product.DiscountedPrice" />
-
     <div class="border p-3 mt-4">
         <div class="row pb-2">
             <h2 class="text-primary">@(Model.Product.Id != 0 ? "Update" : "Create") Product</h2>
@@ -19,42 +17,36 @@
                     <div id="productNameField"></div>
                     <input type="hidden" id="productNameInput" name="Product.ProductName" value="@Model.Product.ProductName" />
                 </div>
-
                 <!-- Product Type -->
                 <div class="mb-3">
                     <label for="productTypeField">Product Type</label>
                     <div id="productTypeField"></div>
                     <input type="hidden" id="productTypeInput" name="Product.ProductType" value="@Model.Product.ProductType" />
                 </div>
-
                 <!-- Category (League) -->
                 <div class="mb-3">
                     <label for="categoryField">Team</label>
                     <div id="categoryField"></div>
                     <input type="hidden" id="categoryInput" name="Product.CategoryId" value="@Model.Product.CategoryId" />
                 </div>
-
                 <!-- Edition -->
                 <div class="mb-3">
                     <label for="editionField">Edition</label>
                     <div id="editionField"></div>
                     <input type="hidden" id="editionInput" name="Product.Edition" value="@Model.Product.Edition" />
                 </div>
-
                 <!-- Year -->
                 <div class="mb-3">
                     <label for="yearField">Year</label>
                     <div id="yearField"></div>
                     <input type="hidden" id="yearInput" name="Product.Year" value="@Model.Product.Year" />
                 </div>
-
                 <!-- Price -->
                 <div class="mb-3">
                     <label for="priceField">Price</label>
                     <div id="priceField"></div>
                     <input type="hidden" id="priceInput" name="Product.Price" value="@Model.Product.Price" />
                 </div>
-
                 <!-- Discount Rate -->
                 <div class="mb-3">
                     <label for="discountField">Discount Rate</label>
@@ -62,13 +54,11 @@
                     <input type="hidden" id="discountInput" name="Product.DiscountPercent" value="@Model.Product.DiscountPercent" />
                     <span asp-validation-for="Product.DiscountPercent" class="text-danger"></span>
                 </div>
-
                 <!-- Image URL -->
                 <div class="mb-3">
                     <label for="imageUrlField">Image URL</label>
                     <input type="file" name="file" class="form-control" />
                 </div>
-
                 <!-- Submit Button (Create/Update) -->
                 @if (Model.Product.Id != 0)
                 {
@@ -78,11 +68,9 @@
                 {
                     <button type="submit" class="btn btn-primary">Create</button>
                 }
-
                 <!-- Back Button -->
                 <a asp-controller="Product" asp-action="Index" class="btn btn-outline-secondary">Back To List</a>
             </div>
-
             <!-- Product Image Display -->
             <div class="col-2">
                 <img src="@Model.Product.ImageUrl" width="100%" />
@@ -90,10 +78,8 @@
         </div>
     </div>
 </form>
-
 @section Scripts {
-    @await Html.PartialAsync("_ValidationScriptsPartial")
-
+    @* @await Html.PartialAsync("_ValidationScriptsPartial") *@
     <script>
         $(function () {
             // Product Name
@@ -109,7 +95,6 @@
                     { type: "required", message: "Product name is required" }
                 ]
             });
-
             // Product Type
             $("#productTypeField").dxTextBox({
                 value: '@Model.Product.ProductType',
@@ -123,10 +108,9 @@
                     { type: "required", message: "Product Type is required" }
                 ]
             });
-
             // Category (League)
             $("#categoryField").dxSelectBox({
-                value: '@Model.Product.CategoryId',
+                value: @Model.Product.CategoryId == 0 ? "" : @Model.Product.CategoryId,
                 items: @Html.Raw(Json.Serialize(Model.CategoryList)),
                 displayExpr: "text",
                 valueExpr: "value",
@@ -139,7 +123,6 @@
                     { type: "required", message: "Please Enter the Category" }
                 ]
             });
-
             // Edition
             $("#editionField").dxTextBox({
                 value: '@Model.Product.Edition',
@@ -153,10 +136,9 @@
                     { type: "required", message: "Edition is required" }
                 ]
             });
-
             // Year
             $("#yearField").dxNumberBox({
-                value: '@Model.Product.Year',
+                value: '@(Model.Product.Year == 0 ? "" : Model.Product.Year)',
                 placeholder: 'Enter year',
                 showClearButton: true,
                 onValueChanged: function (e) {
@@ -167,10 +149,9 @@
                     { type: "required", message: "Product Year is required" }
                 ]
             });
-
             // Price
             $("#priceField").dxNumberBox({
-                value: '@Model.Product.Price',
+                value: '@(Model.Product.Price == 0 ? "" : Model.Product.Price)',
                 min: 0,
                 showClearButton: true,
                 placeholder: 'Enter price',
@@ -183,7 +164,6 @@
                     { type: "required", message: "Product Price is required" }
                 ]
             });
-
             // Discount Rate
             $("#discountField").dxNumberBox({
                 value: '@Model.Product.DiscountPercent',
@@ -195,11 +175,9 @@
                     updateDiscountedPrice();
                 }
             });
-
             function updateDiscountedPrice() {
                 var price = $("#priceField").dxNumberBox("instance").option("value");
                 var discountPercent = $("#discountField").dxNumberBox("instance").option("value");
-
                 if (price && discountPercent) {
                     var discountedPrice = price - ((discountPercent / 100) * price);
                     $("#discountPriceInput").val(discountedPrice); // Store the value in the hidden field
@@ -211,7 +189,6 @@
                     e.preventDefault();
                 }
             });
-            
     </script>
 }
 

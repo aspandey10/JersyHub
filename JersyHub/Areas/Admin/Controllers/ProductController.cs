@@ -76,7 +76,16 @@ namespace JersyHub.Areas.Admin.Controllers
                 {
                     string fileName= Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
                     string productPath= Path.Combine(wwwRootPath, @"images\product");
-                    using(var fileStream= new FileStream(Path.Combine(productPath, fileName), FileMode.Create))
+
+                    if(!string.IsNullOrEmpty(obj.Product.ImageUrl))
+                    {
+                        var oldImagePath = Path.Combine(wwwRootPath, obj.Product.ImageUrl.TrimStart('\\'));
+                        if (System.IO.File.Exists(oldImagePath))
+                        {
+                            System.IO.File.Delete(oldImagePath);
+                        }
+                    } 
+                    using (var fileStream= new FileStream(Path.Combine(productPath, fileName), FileMode.Create))
                     {
                         file.CopyTo(fileStream);
                     }
