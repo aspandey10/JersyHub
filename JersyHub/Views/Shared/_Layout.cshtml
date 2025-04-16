@@ -55,18 +55,22 @@
                                 </ul>
                             </li>
                         }
-                        @if (HttpContextAccessor.HttpContext.Session.GetInt32(StaticDetail.SessionCart) != null)
+                        @if (User.IsInRole(StaticDetail.Role_Customer))
                         {
-                            <li class="nav-item">
-                                <a class="nav-link text-light" asp-area="Customer" asp-controller="Cart" asp-action="Index"><i class="bi bi-cart"></i>(@HttpContextAccessor.HttpContext.Session.GetInt32(StaticDetail.SessionCart))</a>
-                            </li>
+                            @if (HttpContextAccessor.HttpContext.Session.GetInt32(StaticDetail.SessionCart) != null)
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link text-light" asp-area="Customer" asp-controller="Cart" asp-action="Index"><i class="bi bi-cart"></i>(@HttpContextAccessor.HttpContext.Session.GetInt32(StaticDetail.SessionCart))</a>
+                                </li>
+                            }
+                            else
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link text-light" asp-area="Customer" asp-controller="Cart" asp-action="Index"><i class="bi bi-cart"></i> (0)</a>
+                                </li>
+                            }
                         }
-                        else
-                        {
-                            <li class="nav-item">
-                                <a class="nav-link text-light" asp-area="Customer" asp-controller="Cart" asp-action="Index"><i class="bi bi-cart"></i> (0)</a>
-                            </li>
-                        }
+                       
 
 
 
