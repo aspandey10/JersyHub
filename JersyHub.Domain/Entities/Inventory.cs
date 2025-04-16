@@ -26,6 +26,7 @@ namespace JersyHub.Models
 
         [Required]
         public string Distributer { get; set; }
+        public DateTime LastEmail { get; set; }
 
 
 

@@ -1,5 +1,6 @@
 ﻿using JersyHub.Application.Repository.IRepository;
 using JersyHub.Domain.Entities;
+using JersyHub.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -39,6 +40,29 @@ namespace JersyHub.Application.Services
                         _uow.ShoppingCart.Update(cartItem);
                         _uow.Save();
                     }
+                }
+            }
+        }
+
+        public async Task SendInventoryEmails()
+        {
+            List<Inventory> inventories = _uow.Inventory.GetAll().ToList();
+            foreach (var inventory in inventories)
+            {
+                if (inventory.QuantityInStock <= 5)
+                {
+                    if (inventory.LastEmail == DateTime.MinValue||inventory.LastEmail.AddDays(1) <= DateTime.Now)
+                    {
+                        var product = _uow.Product.Get(u => u.Id == inventory.ProductId);
+                        var email = "adrspande10@gmail.com";
+                        var subject = "Low Inventory Alert";
+                        var body = $"The inventory for {product.ProductName} is low. Please restock.";
+                        await _emailSender.SendEmailAsync(email, subject, body);
+                        inventory.LastEmail = DateTime.Now; // Update LastEmail date
+                        _uow.Inventory.Update(inventory);
+                        _uow.Save();
+                    }
+                        
                 }
             }
         }

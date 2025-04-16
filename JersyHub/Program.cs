@@ -94,6 +94,11 @@ using (var scope = app.Services.CreateScope())
     () => emailReminderService.SendReminderEmails(),
      "0 0 */3 * *" 
 );
+    RecurringJob.AddOrUpdate(
+        "send-low-inventory-alerts",
+        () => emailReminderService.SendInventoryEmails(),
+        Cron.Daily(9) 
+    );
 }
 app.Run();
 
