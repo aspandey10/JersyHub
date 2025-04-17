@@ -7,7 +7,34 @@
     double maxPrice = ViewBag.MaxPrice;
 }
 
-<div class="container">
+<div class="container mt-4 mb-3">
+    <div class="row justify-content-center">
+        <div class="col-lg-12">
+            <div id="offerCarousel" class="carousel slide shadow rounded" data-bs-ride="carousel">
+                <div class="carousel-inner rounded">
+                    <div class="carousel-item active">
+                        <img src="~/images/offers/next.jpeg" class="d-block w-100" style="height: 400px; object-fit: cover;" alt="Offer 1">
+                    </div>
+                    <div class="carousel-item">
+                        <img src="~/images/offers/okayy.jpeg" class="d-block w-100" style="height: 400px; object-fit: cover;" alt="Offer 2">
+                    </div>
+                    <
+                </div>
+                <button class="carousel-control-prev" type="button" data-bs-target="#offerCarousel" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Previous</span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#offerCarousel" data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Next</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="container mt-4">
     <div class="row">
         <!-- Filter Sidebar -->
         <div class="col-lg-3">
@@ -28,7 +55,7 @@
                 @foreach (var category in categories)
                 {
                     <div class="form-check">
-                        <input class="form-check-input" type="checkbox" name="categoryIds" value="@category.Id"@(selectedCategories.Contains(category.Id) ? "checked" : "")>
+                        <input class="form-check-input" type="checkbox" name="categoryIds" value="@category.Id" @(selectedCategories.Contains(category.Id) ? "checked" : "")>
                         <label class="form-check-label">@category.Name</label>
                     </div>
                 }
@@ -38,41 +65,70 @@
         </div>
 
         <!-- Products List -->
+
+
         <div class="col-lg-9">
             <div class="row g-4">
-                @foreach (var product in Model)
+                @if (Model != null && Model.Any())
                 {
-                    if (product.ProductType == "Jersy")
+                    @foreach (var product in Model)
                     {
-                        <div class="col-lg-3 col-md-4 col-sm-6 d-flex">
-                            <div class="card border-0 shadow border-top border-5 rounded w-100">
-                                <div class="d-flex justify-content-center align-items-center bg-light" style="height: 200px;">
-                                    <img src="@product.ImageUrl" class="img-fluid p-2" style="max-height: 100%;" />
-                                </div>
-                                <div class="card-body d-flex flex-column text-center">
-                                    <h5 class="card-title text-dark opacity-75 text-uppercase flex-grow-1">@product.ProductName</h5>
-                                    @if (product.DiscountPercent > 0)
-                                    {
-                                        <p class="text-muted text-uppercase mb-0"><del>Rs. @product.Price</del></p>
-                                        <p class="text-danger text-uppercase fw-bold">Rs. @product.DiscountedPrice</p>
-                                    }
-                                    else
-                                    {
-                                        <p class="text-dark text-uppercase">Rs. @product.Price</p>
-                                    }
-                                </div>
-                                <div class="card-footer bg-white border-0">
-                                    <a asp-action="Details" asp-controller="Home" asp-area="Customer" asp-route-productId="@product.Id"
-                                       class="btn btn-primary bg-gradient border-0 w-100">Details</a>
+                        if (product.ProductType == "Jersy")
+                        {
+                            <div class="col-lg-3 col-md-4 col-sm-6 d-flex">
+                                <div class="card border-0 shadow border-top border-5 rounded w-100">
+                                    <div class="d-flex justify-content-center align-items-center bg-light" style="height: 200px;">
+                                        <img src="@product.ImageUrl" class="img-fluid p-2" style="max-height: 100%;" />
+                                    </div>
+                                    <div class="card-body d-flex flex-column text-center">
+                                        <h5 class="card-title text-dark opacity-75 text-uppercase flex-grow-1">@product.ProductName</h5>
+                                        @if (product.DiscountPercent > 0)
+                                        {
+                                            <p class="text-muted text-uppercase mb-0"><del>Rs. @product.Price</del></p>
+                                            <p class="text-danger text-uppercase fw-bold">Rs. @product.DiscountedPrice</p>
+                                        }
+                                        else
+                                        {
+                                            <p class="text-dark text-uppercase">Rs. @product.Price</p>
+                                        }
+                                    </div>
+                                    <div class="card-footer bg-white border-0">
+                                        <a asp-action="Details" asp-controller="Home" asp-area="Customer" asp-route-productId="@product.Id"
+                                        class="btn btn-primary bg-gradient border-0 w-100">Details</a>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
+                        }
                     }
                 }
+                else
+                {
+                    <div class="text-center text-muted w-100 my-5">
+                        <i class="bi bi-search display-4"></i> 
+                        <h4 class="mt-3">Oops! No matching products found.</h4>
+                       
+                    </div>
+                }
+
             </div>
         </div>
+
+
+
     </div>
 </div>
+
+@section Scripts {
+    <script>
+        var myCarousel = document.querySelector('#offerCarousel');
+        var carousel = new bootstrap.Carousel(myCarousel, {
+            interval: 5000, // 3 seconds per slide
+            ride: 'carousel'
+        });
+    </script>
+
+
+}
 
 
 

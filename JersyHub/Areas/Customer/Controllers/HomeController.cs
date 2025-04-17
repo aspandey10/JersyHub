@@ -21,7 +21,7 @@ namespace JersyHub.Areas.Customer.Controllers
         private readonly ICategoryService _categoryservice;
         private readonly IProductsService _productservice;
 
-        public HomeController(ILogger<HomeController> logger,  ICategoryService categoryservice, IProductsService productservice, IShoppingCartService shoppingcartservice)
+        public HomeController(ILogger<HomeController> logger, ICategoryService categoryservice, IProductsService productservice, IShoppingCartService shoppingcartservice)
         {
             _logger = logger;
             _categoryservice = categoryservice;
@@ -77,6 +77,33 @@ namespace JersyHub.Areas.Customer.Controllers
             return View(cart);
 
         }
+
+
+
+        [HttpGet]
+        public IActionResult Search(string term)
+        {
+            term = term?.Trim().ToLower();
+            var filteredProducts = _productservice.GetAllProducts()
+                .Where(p => !string.IsNullOrEmpty(term) &&
+                            (p.ProductName.ToLower().Contains(term) || p.ProductType.ToLower().Contains(term)||p.Category.Name.ToLower().Contains(term)));
+
+            // Optional: Show all if no term
+            if (string.IsNullOrWhiteSpace(term))
+            {
+                return RedirectToAction("Index");
+            }
+
+            ViewBag.Categories = _categoryservice.GetAllCategories();
+            ViewBag.SelectedCategories = new List<int>();
+            ViewBag.MinPrice = 100;
+            ViewBag.MaxPrice = 50000;
+
+            return View("Index", filteredProducts);
+        }
+
+
+
         [HttpPost]
         [Authorize]
         public IActionResult Details(ShoppingCart shoppingCart)
@@ -85,12 +112,12 @@ namespace JersyHub.Areas.Customer.Controllers
             var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
             shoppingCart.ApplicationUserId = userId;
             shoppingCart.AddedDate = System.DateTime.Now;
-            ShoppingCart cartDb = _shoppingcartservice.GetCart(userId,shoppingCart.ProductId);
+            ShoppingCart cartDb = _shoppingcartservice.GetCart(userId, shoppingCart.ProductId);
             if (cartDb == null)
             {
                 _shoppingcartservice.AddToCart(shoppingCart);
-                HttpContext.Session.SetInt32(StaticDetail.SessionCart, _shoppingcartservice.GetCartsForUser( userId).Count());
-                
+                HttpContext.Session.SetInt32(StaticDetail.SessionCart, _shoppingcartservice.GetCartsForUser(userId).Count());
+
             }
             else
             {
