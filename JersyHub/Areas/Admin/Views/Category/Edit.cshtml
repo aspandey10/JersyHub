@@ -1,5 +1,10 @@
-﻿﻿@using JersyHub.Domain.Entities
+﻿﻿﻿@using JersyHub.Domain.Entities
 @model Category
+
+
+@{
+    var countries = ViewBag.Countries as string[];
+}
 
 <form method="post">
     <div class="border p-3 mt-4">
@@ -23,7 +28,7 @@
         </div>
 
         <div class="mb-3">
-            <label for="displayOrderField">Display Order</label>
+            <label for="displayOrderField">League Rank</label>
             <div id="displayOrderField"></div>
             <input type="hidden" id="displayOrderInput" name="DisplayOrder" value="@Model.DisplayOrder" />
             <span asp-validation-for="DisplayOrder" class="text-danger"></span>
@@ -38,6 +43,7 @@
     @await Html.PartialAsync("_ValidationScriptsPartial")
 
     <script>
+        var countries = @Html.Raw(Json.Serialize(ViewBag.Countries));
         $(function () {
             $("#nameField").dxTextBox({
                 value: '@Model.Name',
@@ -51,12 +57,13 @@
                 ]
             });
 
-            $("#leagueCountryField").dxTextBox({
+            $("#leagueCountryField").dxSelectBox({
                 value: '@Model.LeagueCountry',
+                dataSource: countries,
+                searchEnabled: true,
+                placeholder: 'Select a country',
                 showClearButton: true,
-                onValueChanged: function (e) {
-                    $("#leagueCountryInput").val(e.value); 
-                }
+                onValueChanged: e => $("#leagueCountryInput").val(e.value)
             }).dxValidator({
                 validationRules: [
                     { type: "required", message: "League country is required" }
@@ -85,7 +92,6 @@
         });
     </script>
 }
-
 
 
 

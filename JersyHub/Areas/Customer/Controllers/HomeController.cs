@@ -56,7 +56,7 @@ namespace JersyHub.Areas.Customer.Controllers
             }
 
             ViewBag.Categories = categories; // Pass categories to the view
-            ViewBag.MinPrice = minPrice ?? 1000; // Default min price
+            ViewBag.MinPrice = minPrice ?? 100; // Default min price
             ViewBag.MaxPrice = maxPrice ?? 50000; // Default max price
             ViewBag.SelectedCategories = categoryIds ?? new List<int>(); // Preserve selected categories
 
@@ -84,11 +84,7 @@ namespace JersyHub.Areas.Customer.Controllers
             var claimsIdentity = (ClaimsIdentity)User.Identity;
             var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
             shoppingCart.ApplicationUserId = userId;
-
             shoppingCart.AddedDate = System.DateTime.Now;
-
-
-
             ShoppingCart cartDb = _shoppingcartservice.GetCart(userId,shoppingCart.ProductId);
             if (cartDb == null)
             {

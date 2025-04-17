@@ -46,6 +46,7 @@ namespace JersyHub.Areas.Admin.Controllers
         }
         public IActionResult Edit(int? id)
         {
+            ViewBag.Countries = StaticDetail.Countries;
             if (id == null || id == 0)
             {
                 return NotFound();
