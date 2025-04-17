@@ -38,31 +38,49 @@
     <div class="row">
         <!-- Filter Sidebar -->
         <div class="col-lg-3">
-            <h5>Filter Products</h5>
+            <div class="card shadow-sm border-0 rounded-4">
+                <div class="card-body">
+                    <h5 class="card-title mb-4 text-primary fw-semibold d-flex align-items-center gap-2">
+                        <i class="bi bi-funnel-fill"></i> Filter Products
+                    </h5>
 
-            <form method="GET">
-                <div class="mb-3">
-                    <label>Min Price (Rs.)</label>
-                    <input type="number" class="form-control" name="minPrice" value="@minPrice" min="100" max="50000" step="100">
+                    <form method="GET">
+                        <!-- Price Filter -->
+                        <div class="mb-4">
+                            <label class="form-label fw-semibold">Min Price (Rs.)</label>
+                            <input type="number" class="form-control rounded-3" name="minPrice" value="@minPrice" min="100" max="50000" step="100">
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="form-label fw-semibold">Max Price (Rs.)</label>
+                            <input type="number" class="form-control rounded-3" name="maxPrice" value="@maxPrice" min="100" max="50000" step="100">
+                        </div>
+
+                        <!-- Category Filter -->
+                        <h6 class="fw-semibold text-primary mb-3 mt-4 d-flex align-items-center gap-2">
+                            <i class="bi bi-tags-fill"></i> Filter by Category
+                        </h6>
+                        <div class="mb-3">
+                            @foreach (var category in categories)
+                            {
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input" type="checkbox" name="categoryIds" value="@category.Id"
+                                           @(selectedCategories.Contains(category.Id) ? "checked" : "") id="cat-@category.Id">
+                                    <label class="form-check-label" for="cat-@category.Id">
+                                        @category.Name
+                                    </label>
+                                </div>
+                            }
+                        </div>
+
+                        <button type="submit" class="btn btn-primary w-100 rounded-3">
+                            <i class="bi bi-filter-circle me-1"></i> Apply Filters
+                        </button>
+                    </form>
                 </div>
-
-                <div class="mb-3">
-                    <label>Max Price (Rs.)</label>
-                    <input type="number" class="form-control" name="maxPrice" value="@maxPrice" min="100" max="50000" step="100">
-                </div>
-
-                <h5 class="mt-3">Filter by Category</h5>
-                @foreach (var category in categories)
-                {
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" name="categoryIds" value="@category.Id" @(selectedCategories.Contains(category.Id) ? "checked" : "")>
-                        <label class="form-check-label">@category.Name</label>
-                    </div>
-                }
-
-                <button type="submit" class="btn btn-primary mt-3">Apply Filters</button>
-            </form>
+            </div>
         </div>
+
 
         <!-- Products List -->
 
