@@ -6,15 +6,14 @@
     <input asp-for="OrderHeader.Id" hidden />
     <br />
     <div class="container">
-        <div class="card">
-            <div class="card-header bg-dark text-light ml-0">
-                <div class="container row">
-                    <div class="col-12 d-none d-md-block col-md-6 pb-1">
-                        <i class="fas fa-shopping-cart"></i> &nbsp; Order Summary
-                    </div>
-                    <div class="col-12 col-md-4 offset-md-2 text-right">
-                        <a asp-action="Index" class="btn btn-outline-info form-control btn-sm">Back to Orders</a>
-                    </div>
+        <div class="card shadow border-0 rounded-4">
+            <!-- Header -->
+            <div class="card-header bg-primary text-white py-4 rounded-top-4">
+                <div class="d-flex justify-content-between align-items-center px-4">
+                    <h4 class="mb-0"><i class="fas fa-shopping-cart me-2"></i> Order Details</h4>
+                    <a asp-action="Index" class="btn btn-light btn-sm">
+                        <i class="bi bi-arrow-left"></i> Back to Orders
+                    </a>
                 </div>
             </div>
             <div class="card-body">
@@ -136,6 +135,7 @@
                                     @if (User.IsInRole(StaticDetail.Role_Admin) || User.IsInRole(StaticDetail.Role_Employee))
                                     {
                                         <input id="carrier" asp-for="OrderHeader.Carrier" type="text" class="form-control" />
+                                        <span id="carrierError" class="text-danger"></span>
 
                                     }
                                     else
@@ -150,6 +150,7 @@
                                     @if (User.IsInRole(StaticDetail.Role_Admin) || User.IsInRole(StaticDetail.Role_Employee))
                                     {
                                         <input id="trackingNumber" asp-for="OrderHeader.TrackingNumber" type="text" class="form-control" />
+                                        <span id="trackingNumberError" class="text-danger"></span>
 
                                     }
                                     else
@@ -169,13 +170,13 @@
                                 <div class="row my-1">
                                     <div class="col-3">Session ID</div>
                                     <div class="col-9">
-                                        <input asp-for="OrderHeader.SessionId" type="text" class="form-control" />
+                                        <input asp-for="OrderHeader.SessionId" readonly type="text" class="form-control" />
                                     </div>
                                 </div>
                                 <div class="row my-1">
                                     <div class="col-3">Payment Intent ID</div>
                                     <div class="col-9">
-                                        <input asp-for="OrderHeader.PaymentIntentId" type="text" class="form-control" />
+                                        <input asp-for="OrderHeader.PaymentIntentId" readonly type="text" class="form-control" />
                                     </div>
                                 </div>
                             }
@@ -265,18 +266,25 @@
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
     <script>
-        function validateInput() {
-            if(document.getElementById("trackingNumber").value=="")
-            {
-                alert("Please enter the Tracking Number");
-                return false;
+           function validateInput() {
+            let isValid = true;
+
+            const trackingNumber = document.getElementById("trackingNumber").value.trim();
+            const carrier = document.getElementById("carrier").value.trim();
+
+            
+
+            if (trackingNumber === "") {
+                document.getElementById("trackingNumberError").textContent = "Please enter the Tracking Number";
+                isValid = false;
             }
-            if(document.getElementById("carrier").value=="")
-            {
-                alert("Please enter carrier");
-                return false;
+
+            if (carrier === "") {
+                document.getElementById("carrierError").textContent = "Please enter carrier number";
+                isValid = false;
             }
-            return true;
+
+            return isValid;
         }
     </script>
 }
