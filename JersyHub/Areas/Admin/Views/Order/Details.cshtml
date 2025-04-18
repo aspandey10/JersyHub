@@ -249,7 +249,7 @@
                                 }
                                 @if (Model.OrderHeader.OrderStatus != StaticDetail.StatusShipped && Model.OrderHeader.OrderStatus != StaticDetail.StatusCancelled && Model.OrderHeader.OrderStatus != StaticDetail.StatusRefunded)
                                 {
-                                    <button asp-action="CancelOrder"  type="submit" class="btn btn-danger form-control my-1">Cancer Order</button>
+                                    <button asp-action="CancelOrder" type="submit" class="btn btn-danger form-control my-1">Cancer Order</button>
                                 }
 
                             }
@@ -272,7 +272,8 @@
             const trackingNumber = document.getElementById("trackingNumber").value.trim();
             const carrier = document.getElementById("carrier").value.trim();
 
-            
+            document.getElementById("trackingNumberError").textContent = "";
+            document.getElementById("carrierError").textContent = "";
 
             if (trackingNumber === "") {
                 document.getElementById("trackingNumberError").textContent = "Please enter the Tracking Number";

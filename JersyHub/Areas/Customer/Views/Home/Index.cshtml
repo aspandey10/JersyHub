@@ -65,7 +65,7 @@
                             {
                                 <div class="form-check mb-2">
                                     <input class="form-check-input" type="checkbox" name="categoryIds" value="@category.Id"
-                                           @(selectedCategories.Contains(category.Id) ? "checked" : "") id="cat-@category.Id">
+                                    @(selectedCategories.Contains(category.Id) ? "checked" : "") id="cat-@category.Id">
                                     <label class="form-check-label" for="cat-@category.Id">
                                         @category.Name
                                     </label>
@@ -76,7 +76,14 @@
                         <button type="submit" class="btn btn-primary w-100 rounded-3">
                             <i class="bi bi-filter-circle me-1"></i> Apply Filters
                         </button>
+
                     </form>
+                    <form method="GET" asp-action="Index">
+                        <button type="submit" class="btn btn-outline-secondary w-100 mt-2 rounded-3">
+                            <i class="bi bi-x-circle me-1"></i> Clear Filters
+                        </button>
+                    </form>
+
                 </div>
             </div>
         </div>
@@ -91,40 +98,49 @@
                 {
                     @foreach (var product in Model)
                     {
-                        
-                        
-                            <div class="col-lg-3 col-md-4 col-sm-6 d-flex">
-                                <div class="card border-0 shadow border-top border-5 rounded w-100">
-                                    <div class="d-flex justify-content-center align-items-center bg-light" style="height: 200px;">
+
+
+                        <div class="col-lg-3 col-md-4 col-sm-6 d-flex">
+                            <div class="card border-0 shadow border-top border-5 rounded w-100">
+                                <div class="d-flex justify-content-center align-items-center bg-light" style="height: 200px;">
+                                    @if (product.ImageUrl != null)
+                                    {
                                         <img src="@product.ImageUrl" class="img-fluid p-2" style="max-height: 100%;" />
-                                    </div>
-                                    <div class="card-body d-flex flex-column text-center">
-                                        <h5 class="card-title text-dark opacity-75 text-uppercase flex-grow-1">@product.ProductName</h5>
-                                        @if (product.DiscountPercent > 0)
-                                        {
-                                            <p class="text-muted text-uppercase mb-0"><del>Rs. @product.Price</del></p>
-                                            <p class="text-danger text-uppercase fw-bold">Rs. @product.DiscountedPrice</p>
-                                        }
-                                        else
-                                        {
-                                            <p class="text-dark text-uppercase">Rs. @product.Price</p>
-                                        }
-                                    </div>
-                                    <div class="card-footer bg-white border-0">
-                                        <a asp-action="Details" asp-controller="Home" asp-area="Customer" asp-route-productId="@product.Id"
-                                        class="btn btn-primary bg-gradient border-0 w-100">Details</a>
-                                    </div>
+
+                                    }
+                                    else
+                                    {
+                                        <img src="~/images/noimage.png" class="img-fluid p-2" style="max-height: 100%;" />
+
+                                    }
+                                </div>
+                                <div class="card-body d-flex flex-column text-center">
+                                    <h5 class="card-title text-dark opacity-75 text-uppercase flex-grow-1">@product.ProductName</h5>
+                                    @if (product.DiscountPercent > 0)
+                                    {
+                                        <p class="text-muted text-uppercase mb-0"><del>Rs. @product.Price</del></p>
+                                        <p class="text-danger text-uppercase fw-bold">Rs. @product.DiscountedPrice</p>
+                                    }
+                                    else
+                                    {
+                                        <p class="text-dark text-uppercase">Rs. @product.Price</p>
+                                    }
+                                </div>
+                                <div class="card-footer bg-white border-0">
+                                    <a asp-action="Details" asp-controller="Home" asp-area="Customer" asp-route-productId="@product.Id"
+                                       class="btn btn-primary bg-gradient border-0 w-100">Details</a>
                                 </div>
                             </div>
-                        
+                        </div>
+
                     }
                 }
                 else
                 {
                     <div class="text-center text-muted w-100 my-5">
-                        <i class="bi bi-search display-4"></i> 
+                        <i class="bi bi-search display-4"></i>
                         <h4 class="mt-3">Oops! No matching products found.</h4>
-                       
+
                     </div>
                 }
 

@@ -113,6 +113,7 @@ namespace JersyHub.Areas.Customer.Controllers
         public IActionResult CheckOut()
         {
             var shoppingCartVM= _shoppingcartservice.Checkout(User);
+            
             return View(shoppingCartVM);
         }
         [HttpPost]

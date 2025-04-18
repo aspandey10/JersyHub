@@ -82,10 +82,11 @@
                     <!-- Center Search Form -->
                     <div class="position-absolute start-50 translate-middle-x d-none d-md-block" style="width: 40%;">
                         <form class="d-flex" role="search" asp-area="Customer" asp-controller="Home" asp-action="Search" method="get">
-                            <input class="form-control me-2" type="search" placeholder="Search JersyHub..." aria-label="Search" name="term" value="@(Context.Request.Query["term"])">
+                            <input id="searchInput" class="form-control me-2" type="search" placeholder="Search JersyHub..." aria-label="Search" name="term" value="@(Context.Request.Query["term"])">
                             <button class="btn btn-light" type="submit"><i class="bi bi-search"></i></button>
                         </form>
                     </div>
+
 
                     <!-- Right Partial -->
                     <div class="ms-auto">
@@ -114,6 +115,18 @@
     <script src="https://cdn3.devexpress.com/jslib/24.2.3/js/dx.all.js" defer></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/exceljs/4.3.0/exceljs.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+    <script>
+        // Get the search input element
+        var searchInput = document.getElementById("searchInput");
+
+        // Event listener for when the input changes (including when the cross is clicked)
+        searchInput.addEventListener("input", function () {
+            if (searchInput.value === "") {
+                // Trigger the Index action of the Home controller when the cross is clicked and input is cleared
+                window.location.href = "/Customer/Home/Index"; // Redirect to the Home/Index action
+            }
+        });
+    </script>
 
     @await RenderSectionAsync("Scripts", required: false)
 </body>

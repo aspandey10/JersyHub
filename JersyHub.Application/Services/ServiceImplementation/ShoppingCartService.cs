@@ -18,13 +18,15 @@ namespace JersyHub.Application.Services.ServiceImplementation
         private readonly IUnitOfWork uow;
         private readonly IOrderDetailService _orderDetailService;
         private readonly IOrderHeaderService _orderHeaderService;
+        private readonly IInventoryService _inventoryservice;
         private readonly string _domain = "https://localhost:7120/";
 
-        public ShoppingCartService(IUnitOfWork uow, IOrderDetailService orderDetailService, IOrderHeaderService orderHeaderService)
+        public ShoppingCartService(IUnitOfWork uow, IOrderDetailService orderDetailService, IOrderHeaderService orderHeaderService,IInventoryService inventoryservice)
         {
             this.uow = uow;
             _orderDetailService = orderDetailService;
             _orderHeaderService = orderHeaderService;
+            _inventoryservice = inventoryservice;
         }
 
 
@@ -136,6 +138,7 @@ namespace JersyHub.Application.Services.ServiceImplementation
 
         public ShoppingCartVM Checkout(ClaimsPrincipal User)
         {
+            
             var claimsIdentity = (ClaimsIdentity)User.Identity;
             var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
 
@@ -144,6 +147,7 @@ namespace JersyHub.Application.Services.ServiceImplementation
                 ShoppingCartList = uow.ShoppingCart.GetAll(u => u.ApplicationUserId == userId, includeProperties: "Product,Product.Category"),
                 OrderHeader = new()
             };
+           
 
             shoppingCartVM.OrderHeader.ApplicationUser = uow.ApplicationUser.Get(ApplicationUser => ApplicationUser.Id == userId);
             shoppingCartVM.OrderHeader.Name = shoppingCartVM.OrderHeader.ApplicationUser.Name;
