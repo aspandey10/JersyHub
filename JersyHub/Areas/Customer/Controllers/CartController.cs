@@ -117,12 +117,12 @@ namespace JersyHub.Areas.Customer.Controllers
         }
         [HttpPost]
         [ActionName("CheckOut")]
-        public IActionResult CheckOutPost()
+        public IActionResult CheckOutPost(ShoppingCartVM shoppingcart)
         {
             var claimsIdentity = (ClaimsIdentity)User.Identity;
             var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;           
-            var session = _shoppingcartservice.CreateCheckoutSession(shoppingCartVM, userId);
-            _orderheaderservice.UpdateStripePaymentId(shoppingCartVM.OrderHeader.Id, session.Id, session.PaymentIntentId);
+            var session = _shoppingcartservice.CreateCheckoutSession(shoppingcart, userId);
+            _orderheaderservice.UpdateStripePaymentId(shoppingcart.OrderHeader.Id, session.Id, session.PaymentIntentId);
             Response.Headers.Add("Location", session.Url);
             return new StatusCodeResult(303);
         }

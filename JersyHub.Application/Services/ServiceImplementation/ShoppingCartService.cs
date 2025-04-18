@@ -79,11 +79,6 @@ namespace JersyHub.Application.Services.ServiceImplementation
             shoppingCartVM.OrderHeader.ApplicationUserId = userId;
 
             shoppingCartVM.OrderHeader.ApplicationUser = uow.ApplicationUser.Get(u => u.Id == userId);
-            shoppingCartVM.OrderHeader.Name = shoppingCartVM.OrderHeader.ApplicationUser.Name;
-            shoppingCartVM.OrderHeader.StreetAddress = shoppingCartVM.OrderHeader.ApplicationUser.Address;
-            shoppingCartVM.OrderHeader.PhoneNumber = shoppingCartVM.OrderHeader.ApplicationUser.PhoneNumber;
-
-            // Calculate the order total and apply discounts
             foreach (var cart in shoppingCartVM.ShoppingCartList)
             {
                 cart.Price = cart.Product.DiscountPercent > 0 ? cart.Product.DiscountedPrice : cart.Product.Price;
