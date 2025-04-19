@@ -1,4 +1,6 @@
-﻿using JersyHub.Models;
+﻿using JersyHub.Application.ViewModel;
+using JersyHub.Models;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,5 +21,6 @@ namespace JersyHub.Application.Services.ServiceInterface
         Task SendEmailToUserAsync(ClaimsPrincipal User);
 
         IEnumerable<Product> GetAllSimilar(List<int> catid, List<int> excludeProductId);
+        void InsertImage(ProductVM obj, IFormFile? file);
     }
 }

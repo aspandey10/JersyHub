@@ -71,27 +71,7 @@ namespace JersyHub.Areas.Admin.Controllers
         {
             if (ModelState.IsValid)
             {
-                string wwwRootPath = _webHostEnvironment.WebRootPath;
-                if (file != null)
-                {
-                    string fileName= Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
-                    string productPath= Path.Combine(wwwRootPath, @"images\product");
-
-                    if(!string.IsNullOrEmpty(obj.Product.ImageUrl))
-                    {
-                        var oldImagePath = Path.Combine(wwwRootPath, obj.Product.ImageUrl.TrimStart('\\'));
-                        if (System.IO.File.Exists(oldImagePath))
-                        {
-                            System.IO.File.Delete(oldImagePath);
-                        }
-                    } 
-                    using (var fileStream= new FileStream(Path.Combine(productPath, fileName), FileMode.Create))
-                    {
-                        file.CopyTo(fileStream);
-                    }
-                      
-                    obj.Product.ImageUrl = @"\images\product\" + fileName;
-                }
+                _productservice.InsertImage(obj, file);
                 if (obj.Product.DiscountPercent > 0)
                 {
                     var shoppingCarts = _shoppingcartservice.GetAllCarts();

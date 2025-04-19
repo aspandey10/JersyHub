@@ -20,7 +20,7 @@
 
 <script>
     $(document).ready(function () {
-        var orders = @Html.Raw(Json.Serialize(Model)); 
+        var orders = @Html.Raw(Json.Serialize(Model));
 
         var dataGrid=$("#orderGrid").dxDataGrid({
             dataSource: orders,
@@ -35,7 +35,7 @@
                 { dataField: "orderHeader.id", caption: "ID" },
                 { dataField: "orderHeader.name", caption: "Customer Name" },
                 { dataField: "orderHeader.phoneNumber", caption: "Phone Number" },
-                { dataField: "orderHeader.applicationUser.email", caption: "Email" }, 
+                { dataField: "orderHeader.applicationUser.email", caption: "Email" },
                 { dataField: "orderHeader.orderStatus", caption: "Status" },
                 { dataField: "orderHeader.orderTotal", caption: "Total", },
                 {dataField: "orderHeader.orderDate", caption: "Order Date",dataType: "date",format: "yyyy-MM-dd",sortOrder: "desc", sortIndex: 0 },
@@ -48,7 +48,7 @@
                     cellTemplate: function (container, options) {
                         var id = options.data.orderHeader.id;
 
-                        // Create the Details button 
+                        // Create the Details button
                         $("<a>")
                             .addClass("btn btn-primary mx-1")
                             .attr("href", "/Admin/Order/Details/" + id)
@@ -59,19 +59,27 @@
             ],
 
            onRowPrepared: function (e) {
-                if (e.rowType == "data") { 
-                var status = e.data.orderHeader.orderStatus; 
+                if (e.rowType == "data") {
+                var status = e.data.orderHeader.orderStatus;
 
-            
-            if (status == "Approved") {
-                e.rowElement.css("background-color", "#d4edda"); 
-            } else if (status == "Pending") {
-                e.rowElement.css("background-color", "#fff3cd"); 
-            } else if (status == "Cancelled") {
-                e.rowElement.css("background-color", "#f8d7da");
-            }
+
+               if (status === "Approved") {
+                    e.rowElement.css("background-color", "#d4edda"); // green
+                } 
+                else if (status === "Pending") {
+                    e.rowElement.css("background-color", "#fff3cd"); // yellow
+                } 
+                else if (status === "Cancelled") {
+                    e.rowElement.css("background-color", "#f8d7da"); // red
+                } 
+                else if (status === "Shipped") {
+                    e.rowElement.css("background-color", "#cce5ff"); // blue
+                } 
+                else if (status === "Processing") {
+                    e.rowElement.css("background-color", "#e2e3e5"); // gray
+                }
+            }   
         }
-    }
 
 
 
@@ -96,7 +104,7 @@
                     saveAs(new Blob([buffer],{type:"application/octet-stream"}), "Orders.xlsx");
                 });
             });
-            
+
         }
 
     });

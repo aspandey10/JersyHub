@@ -1,14 +1,17 @@
 ﻿using JersyHub.Application.Repository.IRepository;
 using JersyHub.Application.Services.ServiceInterface;
+using JersyHub.Application.ViewModel;
 using JersyHub.Models;
-using System.Security.Claims;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
+using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Identity.UI.Services;
 
 namespace JersyHub.Application.Services.ServiceImplementation
 {
@@ -16,11 +19,13 @@ namespace JersyHub.Application.Services.ServiceImplementation
     {
         private readonly IUnitOfWork uow;
         private readonly IEmailSender emailSender;
+        private readonly IWebHostEnvironment webHostEnvironment;
 
-        public ProductsService(IUnitOfWork uow, IEmailSender emailSender )
+        public ProductsService(IUnitOfWork uow, IEmailSender emailSender, IWebHostEnvironment webHostEnvironment)
         {
             this.uow = uow;
             this.emailSender = emailSender;
+            this.webHostEnvironment = webHostEnvironment;
         }
 
 
@@ -52,6 +57,31 @@ namespace JersyHub.Application.Services.ServiceImplementation
         {
             var data = uow.Product.Get(u => u.Id == id, includeProperties: "Category");
             return data;
+        }
+
+        public void InsertImage(ProductVM obj, IFormFile? file)
+        {
+            string wwwRootPath = webHostEnvironment.WebRootPath;
+            if (file != null)
+            {
+                string fileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
+                string productPath = Path.Combine(wwwRootPath, @"images\product");
+
+                if (!string.IsNullOrEmpty(obj.Product.ImageUrl))
+                {
+                    var oldImagePath = Path.Combine(wwwRootPath, obj.Product.ImageUrl.TrimStart('\\'));
+                    if (System.IO.File.Exists(oldImagePath))
+                    {
+                        System.IO.File.Delete(oldImagePath);
+                    }
+                }
+                using (var fileStream = new FileStream(Path.Combine(productPath, fileName), FileMode.Create))
+                {
+                    file.CopyTo(fileStream);
+                }
+
+                obj.Product.ImageUrl = @"\images\product\" + fileName;
+            }
         }
 
         public async Task SendEmailToUserAsync(ClaimsPrincipal User)
