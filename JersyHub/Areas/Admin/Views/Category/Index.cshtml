@@ -13,18 +13,18 @@
         </div>
     </div>
 
-    <!-- DataGrid Container -->
+  
     <div id="categoryGrid"></div>
 </div>
 
 
 <script>
     $(document).ready(function () {
-        var categories = @Html.Raw(Json.Serialize(Model)); // Convert Model to JSON
+        var categories = @Html.Raw(Json.Serialize(Model)); 
 
         $("#categoryGrid").dxDataGrid({
             dataSource: categories,
-            showBorders: true,  // Adds border to entire DataGrid
+            showBorders: true,  
             columnAutoWidth: true,
             paging: { pageSize: 10 },
             headerFilter: { visible: true },

@@ -1,7 +1,6 @@
 ﻿﻿﻿@using JersyHub.Domain.Entities
 @model Category
 
-
 @{
     var countries = ViewBag.Countries as string[];
 }
@@ -17,21 +16,18 @@
             <label for="nameField">Name</label>
             <div id="nameField"></div>
             <input type="hidden" id="nameInput" name="Name" value="@Model.Name" />
-            <span asp-validation-for="Name" class="text-danger"></span>
         </div>
 
         <div class="mb-3">
             <label for="leagueCountryField">League Country</label>
             <div id="leagueCountryField"></div>
             <input type="hidden" id="leagueCountryInput" name="LeagueCountry" value="@Model.LeagueCountry" />
-            <span asp-validation-for="LeagueCountry" class="text-danger"></span>
         </div>
 
         <div class="mb-3">
             <label for="displayOrderField">League Rank</label>
             <div id="displayOrderField"></div>
             <input type="hidden" id="displayOrderInput" name="DisplayOrder" value="@Model.DisplayOrder" />
-            <span asp-validation-for="DisplayOrder" class="text-danger"></span>
         </div>
 
         <button type="submit" class="btn btn-primary">Edit</button>
@@ -40,7 +36,7 @@
 </form>
 
 @section Scripts {
-    @await Html.PartialAsync("_ValidationScriptsPartial")
+
 
     <script>
         var countries = @Html.Raw(Json.Serialize(ViewBag.Countries));
@@ -74,14 +70,13 @@
                 value: '@Model.DisplayOrder',
                 showClearButton: true,
                 min: 1,
-                max: 100,
                 onValueChanged: function (e) {
                     $("#displayOrderInput").val(e.value); 
                 }
             }).dxValidator({
                 validationRules: [
                     { type: "required", message: "Display order is required" },
-                    { type: "range", min: 1, max: 100, message: "Must be between 1 and 100" }
+                    { type: "range", min: 1, max: 288, message: "Must be between 1 and 288" }
                 ]
             });
             $('form').on('submit', function (e) {

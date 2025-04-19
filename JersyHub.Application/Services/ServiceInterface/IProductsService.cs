@@ -1,4 +1,5 @@
 ﻿using JersyHub.Application.ViewModel;
+using JersyHub.Domain.Entities;
 using JersyHub.Models;
 using Microsoft.AspNetCore.Http;
 using System;
@@ -18,7 +19,7 @@ namespace JersyHub.Application.Services.ServiceInterface
         IEnumerable<Product> GetAllProducts();
         Product GetProductById(int id);
 
-        Task SendEmailToUserAsync(ClaimsPrincipal User);
+        Task SendEmailToUserAsync(ShoppingCart cart);
 
         IEnumerable<Product> GetAllSimilar(List<int> catid, List<int> excludeProductId);
         void InsertImage(ProductVM obj, IFormFile? file);

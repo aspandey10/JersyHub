@@ -67,11 +67,22 @@ namespace JersyHub.Areas.Admin.Controllers
 
         }
         [HttpPost]
-        public async Task<IActionResult> UpsertAsync(ProductVM obj, IFormFile? file)
+        public async Task<IActionResult> Upsert(ProductVM obj, IFormFile? file)
         {
             if (ModelState.IsValid)
             {
                 _productservice.InsertImage(obj, file);
+                
+                if (obj.Product.Id == 0)
+                {
+                    _productservice.AddProduct(obj.Product);
+                    TempData["success"] = "Product Created Successfully.";
+                }
+                else
+                {
+                    _productservice.UpdateProduct(obj.Product);
+                    TempData["success"] = "Product updated Successfully.";
+                }
                 if (obj.Product.DiscountPercent > 0)
                 {
                     var shoppingCarts = _shoppingcartservice.GetAllCarts();
@@ -79,32 +90,21 @@ namespace JersyHub.Areas.Admin.Controllers
                     {
                         if (cart.ProductId == obj.Product.Id)
                         {
-                            _productservice.SendEmailToUserAsync(User);
+                            await _productservice.SendEmailToUserAsync(cart);
                             cart.LastEmail = DateTime.Now;
                             _shoppingcartservice.UpdateCart(cart);
                         }
                     }
                 }
 
-                if (obj.Product.Id == 0)
-                {
-                    _productservice.AddProduct(obj.Product);
-                    TempData["success"] = "Product Created Successfully. ";
 
-                }
-                else
-                {
-                    _productservice.UpdateProduct(obj.Product);
-                    TempData["success"] = "Product updated Successfully. ";
 
-                }
-                
                 return RedirectToAction("Index");
             }
-            return View();
 
+            return View();
         }
-       
+
 
         public IActionResult Delete(int? id)
         {

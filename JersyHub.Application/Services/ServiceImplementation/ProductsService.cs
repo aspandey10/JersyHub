@@ -1,6 +1,7 @@
 ﻿using JersyHub.Application.Repository.IRepository;
 using JersyHub.Application.Services.ServiceInterface;
 using JersyHub.Application.ViewModel;
+using JersyHub.Domain.Entities;
 using JersyHub.Models;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -18,10 +19,10 @@ namespace JersyHub.Application.Services.ServiceImplementation
     public class ProductsService : IProductsService
     {
         private readonly IUnitOfWork uow;
-        private readonly IEmailSender emailSender;
+        private readonly IAppEmailSender emailSender;
         private readonly IWebHostEnvironment webHostEnvironment;
 
-        public ProductsService(IUnitOfWork uow, IEmailSender emailSender, IWebHostEnvironment webHostEnvironment)
+        public ProductsService(IUnitOfWork uow, IAppEmailSender emailSender, IWebHostEnvironment webHostEnvironment)
         {
             this.uow = uow;
             this.emailSender = emailSender;
@@ -84,15 +85,12 @@ namespace JersyHub.Application.Services.ServiceImplementation
             }
         }
 
-        public async Task SendEmailToUserAsync(ClaimsPrincipal User)
+        public async Task SendEmailToUserAsync(ShoppingCart cart)
         {
-            var claimsIdentity = (ClaimsIdentity)User.Identity;
-            var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
-
-            var user = uow.ApplicationUser.Get(u => u.Id == userId);
+            var user = uow.ApplicationUser.Get(u => u.Id == cart.ApplicationUserId);
             var email = user.Email;
             var subject = "Discount Alert";
-            var body = "Hey!There is a discount in the product that is in your cart.check it out";
+            var body = $"Hey!There is a discount in the product that is in your cart.check it out. The {cart.Product.ProductName} has {cart.Product.DiscountPercent}% off in it";
             await emailSender.SendEmailAsync(email, subject, body);
         }
 

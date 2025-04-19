@@ -1,10 +1,6 @@
 ﻿@using JersyHub.Domain.Entities
 @model Category
 
-@{
-    var countries = ViewBag.Countries as string[];
-}
-
 <form method="post" asp-action="Create">
     <div class="border p-3 mt-4">
         <div class="row pb-2">
@@ -36,8 +32,6 @@
 </form>
 
 @section Scripts {
-    @await Html.PartialAsync("_ValidationScriptsPartial")
-
     <script>
         var countries = @Html.Raw(Json.Serialize(ViewBag.Countries));
 
